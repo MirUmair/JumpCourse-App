@@ -1,16 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
-import { RouteProp } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { BackHandler, ImageBackground, Linking, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'; // Import BackHandler
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
-import { useDispatch } from 'react-redux';
-import { bg1 } from '../../../assets';
-import { Button, Input, Loader, Modal } from '../../components';
-import { login, signUp } from '../../redux/features/userSlice'; // Import the login action
-import { AppDispatch } from '../../redux/store'; // Import types for state and dispatch
-import { BaseUrl, Fonts, Screens } from '../../utils'; // Fonts
-import { Colors } from '../../theme';
+import React, {useEffect, useState} from 'react';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import {RouteProp} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {
+  BackHandler,
+  ImageBackground,
+  Linking,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from 'react-native'; // Import BackHandler
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
+import {useDispatch} from 'react-redux';
+import {bg1} from '../../../assets';
+import {Button, Input, Loader, Modal} from '../../components';
+import {login, signUp} from '../../redux/features/userSlice'; // Import the login action
+import {AppDispatch} from '../../redux/store'; // Import types for state and dispatch
+import {BaseUrl, Fonts, Screens} from '../../utils'; // Fonts
+import {Colors} from '../../theme';
 
 type RootStackParamList = {
   Login: undefined;
@@ -19,7 +36,10 @@ type RootStackParamList = {
   SignUp: undefined;
 };
 
-type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
+type LoginScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'Login'
+>;
 type LoginScreenRouteProp = RouteProp<RootStackParamList, 'Login'>;
 
 type Props = {
@@ -27,7 +47,7 @@ type Props = {
   route: LoginScreenRouteProp;
 };
 
-function Login({ navigation }: Props): React.JSX.Element {
+function Login({navigation}: Props): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   const [loader, setLoader] = useState(false);
   const [email, setEmail] = useState('');
@@ -40,7 +60,10 @@ function Login({ navigation }: Props): React.JSX.Element {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId: '150267601582-1ukkjos3mortbdpe8o5bude67cu278e5.apps.googleusercontent.com', //'231913951546-cgs1o3mdmn5uv6jcpeusgqarh7quajvi.apps.googleusercontent.com', // From the Google Cloud Console
+      iosClientId:
+        '150267601582-6vs2t1d5j9331ihslkn3bmkbua8jepbg.apps.googleusercontent.com', // your iOS client ID
+      webClientId:
+        '150267601582-1ukkjos3mortbdpe8o5bude67cu278e5.apps.googleusercontent.com', //'231913951546-cgs1o3mdmn5uv6jcpeusgqarh7quajvi.apps.googleusercontent.com', // From the Google Cloud Console
       offlineAccess: true,
     });
     const backAction = () => {
@@ -50,7 +73,10 @@ function Login({ navigation }: Props): React.JSX.Element {
       }
       return false;
     };
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
     return () => backHandler.remove();
   }, [navigation]);
 
@@ -58,7 +84,7 @@ function Login({ navigation }: Props): React.JSX.Element {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      let user = userInfo.data?.user
+      let user = userInfo.data?.user;
       const userData = {
         email: user?.email,
         password: user?.id,
@@ -67,20 +93,20 @@ function Login({ navigation }: Props): React.JSX.Element {
       };
       //
       const myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append('Content-Type', 'application/json');
       const raw = JSON.stringify({
         email: user?.email,
         password: user?.id,
       });
       const requestOptions = {
-        method: "POST",
+        method: 'POST',
         headers: myHeaders,
         body: raw,
-        redirect: "follow"
+        redirect: 'follow',
       };
-      fetch(BaseUrl + "users/login", requestOptions)
-        .then((response) => response.json())
-        .then((result) => {
+      fetch(BaseUrl + 'users/login', requestOptions)
+        .then(response => response.json())
+        .then(result => {
           if (result?.message === 'User not found') {
             if (user) {
               const userData = {
@@ -92,14 +118,13 @@ function Login({ navigation }: Props): React.JSX.Element {
                 navigation,
                 setLoader,
               };
-              dispatch(signUp(userData))
+              dispatch(signUp(userData));
             }
-          }
-          else {
-            dispatch(login(userData))
+          } else {
+            dispatch(login(userData));
           }
         })
-        .catch((error) => console.error(error));
+        .catch(error => console.error(error));
     } catch (error: any) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         console.log('User cancelled the login');
@@ -112,8 +137,6 @@ function Login({ navigation }: Props): React.JSX.Element {
       }
     }
   };
-
-
 
   // Email Validation RegEx (basic validation)
   const validateEmail = (email: string) => {
@@ -145,7 +168,7 @@ function Login({ navigation }: Props): React.JSX.Element {
       email,
       password,
       navigation, // Pass the navigation object to the thunk
-      setLoader,  // Pass the loader control function to the thunk
+      setLoader, // Pass the loader control function to the thunk
     };
     dispatch(login(loginData));
   };
@@ -158,7 +181,7 @@ function Login({ navigation }: Props): React.JSX.Element {
           barStyle={isDarkMode ? 'light-content' : 'dark-content'}
           backgroundColor={backgroundStyle.backgroundColor}
         />
-        <View style={{ marginTop: hp(50) }}>
+        <View style={{marginTop: hp(50)}}>
           <Input
             focusDesign={true}
             onChangeValue={setEmail}
@@ -166,7 +189,9 @@ function Login({ navigation }: Props): React.JSX.Element {
             value={email}
             keyboardType="email-address"
           />
-          {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+          {emailError ? (
+            <Text style={styles.errorText}>{emailError}</Text>
+          ) : null}
           <Input
             focusDesign={true}
             onChangeValue={setPassword}
@@ -174,51 +199,68 @@ function Login({ navigation }: Props): React.JSX.Element {
             value={password}
             isPassword={true}
           />
-          {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+          {passwordError ? (
+            <Text style={styles.errorText}>{passwordError}</Text>
+          ) : null}
           <Button onPress={handleLogin} Title="Sign in" />
-          <Button leftIcon={true} onPress={googleSignUp} Title="Sign in with Google" />
+          <Button
+            leftIcon={true}
+            onPress={googleSignUp}
+            Title="Sign in with Google"
+          />
 
           <TouchableOpacity
             onPress={() => {
               navigation.navigate('ForgotPassword');
-            }}
-          >
-            <Text style={[styles.bottomText, { marginRight: '2%' }]}>
+            }}>
+            <Text style={[styles.bottomText, {marginRight: '2%'}]}>
               Forgot Password?
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={{ flexDirection: 'row', alignSelf: 'center' }}
+            style={{flexDirection: 'row', alignSelf: 'center'}}
             onPress={() => {
-              navigation.navigate(Screens.SignUp)
-            }}
-          >
-            <Text style={[styles.topText, { fontFamily: Fonts.regular }]}>
+              navigation.navigate(Screens.SignUp);
+            }}>
+            <Text style={[styles.topText, {fontFamily: Fonts.regular}]}>
               Don't have an account?{' '}
             </Text>
-            <Text style={styles.topText}>
-              SignUp
-            </Text>
+            <Text style={styles.topText}>SignUp</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={{ flexDirection: 'row', alignSelf: 'center', marginTop: hp(1) }}
-            onPress={() => {
-              Linking.openURL('https://www.spowartholm.ca/')
+            style={{
+              flexDirection: 'row',
+              alignSelf: 'center',
+              marginTop: hp(1),
             }}
-          >
-            <Text style={[styles.topText, { fontFamily: Fonts.regular, fontSize: wp(3), }]}>
+            onPress={() => {
+              Linking.openURL('https://www.spowartholm.ca/');
+            }}>
+            <Text
+              style={[
+                styles.topText,
+                {fontFamily: Fonts.regular, fontSize: wp(3)},
+              ]}>
               Media by{' '}
             </Text>
-            <Text style={[styles.topText, { textDecorationLine: 'underline', fontSize: wp(3) }]}>
+            <Text
+              style={[
+                styles.topText,
+                {textDecorationLine: 'underline', fontSize: wp(3)},
+              ]}>
               SpowartHolm
             </Text>
-
           </TouchableOpacity>
-          <Text style={[{
-            marginBottom: hp(5),
-            fontFamily: Fonts.regular, fontSize: wp(3),
-            color: Colors.neutral1, textAlign: 'center'
-          }]}>
+          <Text
+            style={[
+              {
+                marginBottom: hp(5),
+                fontFamily: Fonts.regular,
+                fontSize: wp(3),
+                color: Colors.neutral1,
+                textAlign: 'center',
+              },
+            ]}>
             © 2024, used with permission.
           </Text>
         </View>
