@@ -1,0 +1,6 @@
+module Pods_JumpCourse_JumpCourseTests {
+  umbrella header "Pods-JumpCourse-JumpCourseTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
