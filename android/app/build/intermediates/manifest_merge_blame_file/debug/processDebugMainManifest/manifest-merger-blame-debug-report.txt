@@ -1,0 +1,243 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.jumpcourse"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="23"
+9        android:targetSdkVersion="34" />
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:3:5-67
+11-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:3:22-64
+12    <uses-permission android:name="android.permission.CAMERA" />
+12-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:4:5-65
+12-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:4:22-62
+13    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+13-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:5:5-81
+13-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:5:22-78
+14    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+14-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:6:5-80
+14-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:6:22-77
+15    <!--
+16    This manifest file is used only by Gradle to configure debug-only capabilities
+17    for React Native Apps.
+18    -->
+19    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+19-->[com.facebook.react:react-android:0.75.3] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\73b7edff174c2bc2a9c17a52a73bea25\transformed\react-android-0.75.3-debug\AndroidManifest.xml:16:5-78
+19-->[com.facebook.react:react-android:0.75.3] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\73b7edff174c2bc2a9c17a52a73bea25\transformed\react-android-0.75.3-debug\AndroidManifest.xml:16:22-75
+20    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+20-->[androidx.media3:media3-common:1.4.1] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\70a3a82bdbe5aee56550e0b46fbfe509\transformed\media3-common-1.4.1\AndroidManifest.xml:22:5-79
+20-->[androidx.media3:media3-common:1.4.1] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\70a3a82bdbe5aee56550e0b46fbfe509\transformed\media3-common-1.4.1\AndroidManifest.xml:22:22-76
+21
+22    <permission
+22-->[androidx.core:core:1.13.1] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\52d233e8c82fe437c1967dec7a10bdd4\transformed\core-1.13.1\AndroidManifest.xml:22:5-24:47
+23        android:name="com.jumpcourse.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+23-->[androidx.core:core:1.13.1] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\52d233e8c82fe437c1967dec7a10bdd4\transformed\core-1.13.1\AndroidManifest.xml:23:9-81
+24        android:protectionLevel="signature" />
+24-->[androidx.core:core:1.13.1] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\52d233e8c82fe437c1967dec7a10bdd4\transformed\core-1.13.1\AndroidManifest.xml:24:9-44
+25
+26    <uses-permission android:name="com.jumpcourse.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+26-->[androidx.core:core:1.13.1] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\52d233e8c82fe437c1967dec7a10bdd4\transformed\core-1.13.1\AndroidManifest.xml:26:5-97
+26-->[androidx.core:core:1.13.1] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\52d233e8c82fe437c1967dec7a10bdd4\transformed\core-1.13.1\AndroidManifest.xml:26:22-94
+27
+28    <application
+28-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:7:5-27:19
+29        android:name="com.jumpcourse.MainApplication"
+29-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:8:7-38
+30        android:allowBackup="false"
+30-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:12:7-34
+31        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+31-->[androidx.core:core:1.13.1] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\52d233e8c82fe437c1967dec7a10bdd4\transformed\core-1.13.1\AndroidManifest.xml:28:18-86
+32        android:debuggable="true"
+33        android:extractNativeLibs="false"
+34        android:icon="@mipmap/ic_launcher"
+34-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:10:7-41
+35        android:label="@string/app_name"
+35-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:9:7-39
+36        android:roundIcon="@mipmap/ic_launcher_round"
+36-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:11:7-52
+37        android:supportsRtl="true"
+37-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:14:7-33
+38        android:theme="@style/AppTheme"
+38-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:13:7-38
+39        android:usesCleartextTraffic="true" >
+39-->D:\ReactNAtive\JumpCourse-App\android\app\src\debug\AndroidManifest.xml:6:9-44
+40        <activity
+40-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:15:7-26:18
+41            android:name="com.jumpcourse.MainActivity"
+41-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:16:9-37
+42            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+42-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:18:9-118
+43            android:exported="true"
+43-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:21:9-32
+44            android:label="@string/app_name"
+44-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:17:9-41
+45            android:launchMode="singleTask"
+45-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:19:9-40
+46            android:windowSoftInputMode="adjustResize" >
+46-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:20:9-51
+47            <intent-filter>
+47-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:22:9-25:25
+48                <action android:name="android.intent.action.MAIN" />
+48-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:23:13-65
+48-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:23:21-62
+49
+50                <category android:name="android.intent.category.LAUNCHER" />
+50-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:24:13-73
+50-->D:\ReactNAtive\JumpCourse-App\android\app\src\main\AndroidManifest.xml:24:23-70
+51            </intent-filter>
+52        </activity>
+53
+54        <provider
+54-->[:react-native-image-picker] D:\ReactNAtive\JumpCourse-App\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:8:9-16:20
+55            android:name="com.imagepicker.ImagePickerProvider"
+55-->[:react-native-image-picker] D:\ReactNAtive\JumpCourse-App\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:9:13-63
+56            android:authorities="com.jumpcourse.imagepickerprovider"
+56-->[:react-native-image-picker] D:\ReactNAtive\JumpCourse-App\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:10:13-71
+57            android:exported="false"
+57-->[:react-native-image-picker] D:\ReactNAtive\JumpCourse-App\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:11:13-37
+58            android:grantUriPermissions="true" >
+58-->[:react-native-image-picker] D:\ReactNAtive\JumpCourse-App\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:12:13-47
+59            <meta-data
+59-->[:react-native-image-picker] D:\ReactNAtive\JumpCourse-App\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:13:13-15:70
+60                android:name="android.support.FILE_PROVIDER_PATHS"
+60-->[:react-native-image-picker] D:\ReactNAtive\JumpCourse-App\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:14:17-67
+61                android:resource="@xml/imagepicker_provider_paths" />
+61-->[:react-native-image-picker] D:\ReactNAtive\JumpCourse-App\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:15:17-67
+62        </provider>
+63
+64        <activity
+64-->[com.facebook.react:react-android:0.75.3] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\73b7edff174c2bc2a9c17a52a73bea25\transformed\react-android-0.75.3-debug\AndroidManifest.xml:19:9-21:40
+65            android:name="com.facebook.react.devsupport.DevSettingsActivity"
+65-->[com.facebook.react:react-android:0.75.3] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\73b7edff174c2bc2a9c17a52a73bea25\transformed\react-android-0.75.3-debug\AndroidManifest.xml:20:13-77
+66            android:exported="false" />
+66-->[com.facebook.react:react-android:0.75.3] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\73b7edff174c2bc2a9c17a52a73bea25\transformed\react-android-0.75.3-debug\AndroidManifest.xml:21:13-37
+67        <activity
+67-->[com.google.android.gms:play-services-auth:21.0.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\3b13b1a5e20b3ae7c661085825f8406c\transformed\play-services-auth-21.0.0\AndroidManifest.xml:23:9-27:75
+68            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+68-->[com.google.android.gms:play-services-auth:21.0.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\3b13b1a5e20b3ae7c661085825f8406c\transformed\play-services-auth-21.0.0\AndroidManifest.xml:24:13-93
+69            android:excludeFromRecents="true"
+69-->[com.google.android.gms:play-services-auth:21.0.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\3b13b1a5e20b3ae7c661085825f8406c\transformed\play-services-auth-21.0.0\AndroidManifest.xml:25:13-46
+70            android:exported="false"
+70-->[com.google.android.gms:play-services-auth:21.0.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\3b13b1a5e20b3ae7c661085825f8406c\transformed\play-services-auth-21.0.0\AndroidManifest.xml:26:13-37
+71            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+71-->[com.google.android.gms:play-services-auth:21.0.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\3b13b1a5e20b3ae7c661085825f8406c\transformed\play-services-auth-21.0.0\AndroidManifest.xml:27:13-72
+72        <!--
+73            Service handling Google Sign-In user revocation. For apps that do not integrate with
+74            Google Sign-In, this service will never be started.
+75        -->
+76        <service
+76-->[com.google.android.gms:play-services-auth:21.0.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\3b13b1a5e20b3ae7c661085825f8406c\transformed\play-services-auth-21.0.0\AndroidManifest.xml:33:9-37:51
+77            android:name="com.google.android.gms.auth.api.signin.RevocationBoundService"
+77-->[com.google.android.gms:play-services-auth:21.0.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\3b13b1a5e20b3ae7c661085825f8406c\transformed\play-services-auth-21.0.0\AndroidManifest.xml:34:13-89
+78            android:exported="true"
+78-->[com.google.android.gms:play-services-auth:21.0.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\3b13b1a5e20b3ae7c661085825f8406c\transformed\play-services-auth-21.0.0\AndroidManifest.xml:35:13-36
+79            android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION"
+79-->[com.google.android.gms:play-services-auth:21.0.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\3b13b1a5e20b3ae7c661085825f8406c\transformed\play-services-auth-21.0.0\AndroidManifest.xml:36:13-107
+80            android:visibleToInstantApps="true" />
+80-->[com.google.android.gms:play-services-auth:21.0.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\3b13b1a5e20b3ae7c661085825f8406c\transformed\play-services-auth-21.0.0\AndroidManifest.xml:37:13-48
+81
+82        <activity
+82-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\a7740531280a8bbbc238b6669c7345d5\transformed\play-services-base-18.0.1\AndroidManifest.xml:20:9-22:45
+83            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+83-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\a7740531280a8bbbc238b6669c7345d5\transformed\play-services-base-18.0.1\AndroidManifest.xml:20:19-85
+84            android:exported="false"
+84-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\a7740531280a8bbbc238b6669c7345d5\transformed\play-services-base-18.0.1\AndroidManifest.xml:22:19-43
+85            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+85-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\a7740531280a8bbbc238b6669c7345d5\transformed\play-services-base-18.0.1\AndroidManifest.xml:21:19-78
+86
+87        <meta-data
+87-->[com.google.android.gms:play-services-basement:18.2.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\99f6f66a76b07445fa4852ef34329ea5\transformed\play-services-basement-18.2.0\AndroidManifest.xml:21:9-23:69
+88            android:name="com.google.android.gms.version"
+88-->[com.google.android.gms:play-services-basement:18.2.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\99f6f66a76b07445fa4852ef34329ea5\transformed\play-services-basement-18.2.0\AndroidManifest.xml:22:13-58
+89            android:value="@integer/google_play_services_version" />
+89-->[com.google.android.gms:play-services-basement:18.2.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\99f6f66a76b07445fa4852ef34329ea5\transformed\play-services-basement-18.2.0\AndroidManifest.xml:23:13-66
+90
+91        <provider
+91-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\7371c517d09178e5b3a6701c452d7bb8\transformed\emoji2-1.2.0\AndroidManifest.xml:24:9-32:20
+92            android:name="androidx.startup.InitializationProvider"
+92-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\7371c517d09178e5b3a6701c452d7bb8\transformed\emoji2-1.2.0\AndroidManifest.xml:25:13-67
+93            android:authorities="com.jumpcourse.androidx-startup"
+93-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\7371c517d09178e5b3a6701c452d7bb8\transformed\emoji2-1.2.0\AndroidManifest.xml:26:13-68
+94            android:exported="false" >
+94-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\7371c517d09178e5b3a6701c452d7bb8\transformed\emoji2-1.2.0\AndroidManifest.xml:27:13-37
+95            <meta-data
+95-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\7371c517d09178e5b3a6701c452d7bb8\transformed\emoji2-1.2.0\AndroidManifest.xml:29:13-31:52
+96                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+96-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\7371c517d09178e5b3a6701c452d7bb8\transformed\emoji2-1.2.0\AndroidManifest.xml:30:17-75
+97                android:value="androidx.startup" />
+97-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\7371c517d09178e5b3a6701c452d7bb8\transformed\emoji2-1.2.0\AndroidManifest.xml:31:17-49
+98            <meta-data
+98-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\d8243fcfa0f082b345019bd850383426\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:29:13-31:52
+99                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+99-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\d8243fcfa0f082b345019bd850383426\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:30:17-78
+100                android:value="androidx.startup" />
+100-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\d8243fcfa0f082b345019bd850383426\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:31:17-49
+101            <meta-data
+101-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:29:13-31:52
+102                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+102-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:30:17-85
+103                android:value="androidx.startup" />
+103-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:31:17-49
+104        </provider>
+105
+106        <receiver
+106-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:34:9-52:20
+107            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+107-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:35:13-76
+108            android:directBootAware="false"
+108-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:36:13-44
+109            android:enabled="true"
+109-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:37:13-35
+110            android:exported="true"
+110-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:38:13-36
+111            android:permission="android.permission.DUMP" >
+111-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:39:13-57
+112            <intent-filter>
+112-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:40:13-42:29
+113                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+113-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:41:17-91
+113-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:41:25-88
+114            </intent-filter>
+115            <intent-filter>
+115-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:43:13-45:29
+116                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+116-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:44:17-85
+116-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:44:25-82
+117            </intent-filter>
+118            <intent-filter>
+118-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:46:13-48:29
+119                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+119-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:47:17-88
+119-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:47:25-85
+120            </intent-filter>
+121            <intent-filter>
+121-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:49:13-51:29
+122                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+122-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:50:17-95
+122-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\4d8c3e1cef288eff7a4fa493eee16b8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:50:25-92
+123            </intent-filter>
+124        </receiver>
+125
+126        <activity
+126-->[com.jakewharton:process-phoenix:2.1.2] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\edc3829540c45aec2155ea1cc7bcf42f\transformed\process-phoenix-2.1.2\AndroidManifest.xml:8:9-12:75
+127            android:name="com.jakewharton.processphoenix.ProcessPhoenix"
+127-->[com.jakewharton:process-phoenix:2.1.2] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\edc3829540c45aec2155ea1cc7bcf42f\transformed\process-phoenix-2.1.2\AndroidManifest.xml:9:13-73
+128            android:exported="false"
+128-->[com.jakewharton:process-phoenix:2.1.2] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\edc3829540c45aec2155ea1cc7bcf42f\transformed\process-phoenix-2.1.2\AndroidManifest.xml:10:13-37
+129            android:process=":phoenix"
+129-->[com.jakewharton:process-phoenix:2.1.2] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\edc3829540c45aec2155ea1cc7bcf42f\transformed\process-phoenix-2.1.2\AndroidManifest.xml:11:13-39
+130            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+130-->[com.jakewharton:process-phoenix:2.1.2] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\edc3829540c45aec2155ea1cc7bcf42f\transformed\process-phoenix-2.1.2\AndroidManifest.xml:12:13-72
+131
+132        <meta-data
+132-->[com.facebook.soloader:soloader:0.11.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\e24043839ca682ddfdc90d96ffeb4dab\transformed\soloader-0.11.0\AndroidManifest.xml:12:9-14:37
+133            android:name="com.facebook.soloader.enabled"
+133-->[com.facebook.soloader:soloader:0.11.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\e24043839ca682ddfdc90d96ffeb4dab\transformed\soloader-0.11.0\AndroidManifest.xml:13:13-57
+134            android:value="false" />
+134-->[com.facebook.soloader:soloader:0.11.0] C:\Users\Umair Abbasi\.gradle\caches\8.8\transforms\e24043839ca682ddfdc90d96ffeb4dab\transformed\soloader-0.11.0\AndroidManifest.xml:14:13-34
+135    </application>
+136
+137</manifest>
