@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   Alert,
   ImageBackground,
+  Keyboard,
   Linking,
   SafeAreaView,
   StatusBar,
@@ -12,12 +13,11 @@ import {
   View,
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-
 import { bg2 } from '../../../assets';
 import { BaseUrl, Fonts, Screens } from '../../utils';
 import { useDispatch } from 'react-redux';
 import { requestPasswordReset } from '../../redux/features/userSlice';
-import { Loader, Input, Button } from '../../components';
+import { Loader, Input, Button, Modal } from '../../components';
 import axios from 'axios';
 import { Colors } from '../../theme';
 
@@ -29,9 +29,11 @@ function Login({ navigation }): React.JSX.Element {
   const [emailError, setEmailError] = useState('');
   const [loader, setLoader] = useState(false);
 
-  const isDarkMode = useColorScheme() === 'dark';
+  const [message, setMessage] = useState('');
+  const [showMessage, setShowMessage] = useState(false);
 
   const handlePasswordResetRequest = async () => {
+    Keyboard.dismiss()
     setLoader(true);
 
     // Validate email
@@ -53,15 +55,24 @@ function Login({ navigation }): React.JSX.Element {
       body: raw,
       redirect: "follow"
     };
-return
-    fetch(BaseUrl + "users/requestReset")
+    fetch(BaseUrl + "users/requestReset", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         if (result.error) {
-          setLoader(false), Alert.alert('Failed', result.message), console.log(result.message)
+          setMessage('2:' + result.message)
+          setShowMessage(true)
+          setLoader(false),
+            //  Alert.alert('Failed', result.message),
+            console.log(result.message)
         }
         else {
-          setLoader(false), Alert.alert('Success', 'Six digit code sent to your email'), navigation.navigate(Screens.ResetPassword, { email }), console.log(result.message)
+          setLoader(false),
+
+            setMessage('1:Six digit code sent to your email')
+          setShowMessage(true)
+          setTimeout(() => {
+            navigation.navigate(Screens.ResetPassword, { email }), console.log(result.message)
+          }, 2000);
         }
 
       })
@@ -77,11 +88,15 @@ return
 
   return (
     <SafeAreaView  >
+      <StatusBar
+        barStyle={'light-content'}
+        backgroundColor={Colors.secondary3}
+      />
+      <Modal visible={showMessage} setShowMessage={setShowMessage} message={message} />
+
       <Loader loading={loader} />
       <ImageBackground source={bg2} resizeMode="cover" style={styles.image}>
-        <StatusBar
-          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        />
+
         <View style={{ marginTop: hp('68%') }}>
         </View>
         <Input onChangeValue={setEmail} value={email} focusDesign={true} placeholderText={'Email'} />
@@ -118,7 +133,7 @@ return
 
         </TouchableOpacity>
         <Text style={[{
-          marginBottom: hp(6),
+          marginBottom: hp(8),
           fontFamily: Fonts.regular, fontSize: wp(3),
           color: Colors.neutral1, textAlign: 'center'
         }]}>

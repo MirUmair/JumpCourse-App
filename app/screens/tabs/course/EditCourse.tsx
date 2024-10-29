@@ -1,22 +1,18 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Modal, SafeAreaView, StyleSheet, Text, View, TouchableOpacity, ScrollView, FlatList, Platform, Alert, KeyboardAvoidingView, Dimensions } from 'react-native';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { Alert, FlatList, KeyboardAvoidingView, Modal as Modal1, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SelectList } from 'react-native-dropdown-select-list';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Input from '../../../components/Input';
-import { updateCourse } from '../../../redux/features/courseSlice'; // import the update action
-import { SelectList } from 'react-native-dropdown-select-list'
-const screenWidth = Dimensions.get('window').width; // Get screen width
-
-import Icon from 'react-native-vector-icons/Ionicons';
-import DropDown from '../../../components/DropDown';
-import Button from '../../../components/Button';
-import Header from '../../../components/Header';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import ModalDropdown from 'react-native-modal-dropdown';
-import { BaseUrl, BaseUrlImage, fenceTypes, Fonts, getToken, getUser, lines, obstacleList, Screens } from '../../../utils';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { useDispatch } from 'react-redux';
+import { BottomSheet, Image, Loader, Modal } from '../../../components';
+import Button from '../../../components/Button';
+import DropDown from '../../../components/DropDown';
+import Header from '../../../components/Header';
+import { AppDispatch } from '../../../redux/store';
 import { Colors } from '../../../theme';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../../../redux/store';
-import { BottomSheet, Image, Loader } from '../../../components';
+import { BaseUrl, fenceTypes, Fonts, lines, obstacleList, Screens } from '../../../utils';
 
 type Obstacle = {
   fenceType: string;
@@ -62,7 +58,10 @@ function EditCourse({ navigation, route }: any): React.JSX.Element {
   const [selected2, setSelected2] = React.useState([]);
   const [selected3, setSelected3] = React.useState([]);
   const bottomSheetRef = useRef(null);
+  const [message, setMessage] = useState('');
 
+  const [showMessage, setShowMessage] = useState(false);
+  const [selected, setSelected] = React.useState([]);
   const [imageHeight, setImageHeight] = useState(); // Default image height
 
   const [rotation, setRotation] = useState('0deg');
@@ -98,8 +97,10 @@ function EditCourse({ navigation, route }: any): React.JSX.Element {
   };
 
   const addOrUpdateObstacle = () => {
-    if (!fenceType || !strides || !line) {
-      Alert.alert("Error", "Please fill in all obstacle details");
+    if (!fenceType || !strides ) {
+      setShowMessage(true)
+      setMessage('2:Please fill in all obstacle details')
+      // Alert.alert("Error", "Please fill in all obstacle details");
       return;
     }
     if (isEditing && currentIndex !== null) {
@@ -133,10 +134,7 @@ function EditCourse({ navigation, route }: any): React.JSX.Element {
       Alert.alert("Error", "Please select a valid date.");
       return false;
     }
-    if (!courseDesigner) {
-      Alert.alert("Error", "Please enter the course designer's name.");
-      return false;
-    }
+
     if (!venue) {
       Alert.alert("Error", "Please enter the venue.");
       return false;
@@ -154,13 +152,12 @@ function EditCourse({ navigation, route }: any): React.JSX.Element {
   const handleSaveChanges = async () => {
     setLoader(true)
     const formdata = new FormData();
-    // formdata.append("courseImage", fileInput.files[0], "/path/to/your/image.jpg");
     image.uri && formdata.append('courseImage', {
       uri: image.uri, // Correct file URI for React Native
       name: image.fileName, // File name
       type: image.type, // MIME type
     });
-    formdata.append("courseDesigner", courseDesigner);
+    // formdata.append("courseDesigner", courseDesigner);
     formdata.append("date", date);
     formdata.append("venue", venue);
     formdata.append("obstacles", JSON.stringify(obstacles));
@@ -176,9 +173,11 @@ function EditCourse({ navigation, route }: any): React.JSX.Element {
     fetch(BaseUrl + "courses/update/" + courseId, requestOptions)
       .then((response) => {
         setLoader(false);
-        Alert.alert("Course details updated successfully.");
-        navigation.navigate(Screens.Courses);
-
+        setShowMessage(true)
+        setMessage('1:Course details updated successfully.')
+        setTimeout(() => {
+          navigation.navigate(Screens.Courses);
+        }, 1000);
       })
       .catch((error) => {
         setLoader(false);
@@ -197,6 +196,8 @@ function EditCourse({ navigation, route }: any): React.JSX.Element {
         Title={'Edit Course Details'}
         navigation={navigation}
         onPressBack={() => navigation.navigate('Courses')} />
+      <Modal visible={showMessage} setShowMessage={setShowMessage} message={message} />
+
       <Loader loading={loader} />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={hp(5)}>
         <ScrollView>
@@ -209,7 +210,7 @@ function EditCourse({ navigation, route }: any): React.JSX.Element {
                 <Icon name={'calendar-number-sharp'} size={hp(3)} color={Colors.secondary3} />
               </TouchableOpacity>
             </View>
-            <Input onChangeValue={setCourseDesigner} value={courseDesigner} placeholderText='Name of course designer' />
+            {/* <Input onChangeValue={setCourseDesigner} value={courseDesigner} placeholderText='Name of course designer' /> */}
             <Input onChangeValue={setVenue} value={venue} placeholderText='Venue' />
             <Input onChangeValue={setTimeAllowed} value={timeAllowed} placeholderText='Maximum Time Allowed' />
             <TouchableOpacity style={styles.inputContainer} onPress={() => { setIsEditing(false), setModalVisible(true) }}>
@@ -226,7 +227,7 @@ function EditCourse({ navigation, route }: any): React.JSX.Element {
               <Button onPress={handleSaveChanges} Title='SAVE CHANGES' textStyle={{ color: Colors.neutral1 }}
                 style={{ backgroundColor: Colors.secondary3, color: Colors.neutral1 }} />
             </View>
-            <Modal
+            <Modal1
               animationType="slide"
               transparent={true}
               visible={modalVisible}
@@ -266,19 +267,7 @@ function EditCourse({ navigation, route }: any): React.JSX.Element {
                     placeholder={'No of Strides'}
                     defaultOption={stridesObj}
                   />
-                  <SelectList
-                    setSelected={(val) => setSelected3(val)}
-                    data={lines}
-                    boxStyles={styles.inputContainer}
-                    save="value"
-                    inputStyles={{ color: line ? Colors.neutral2 : Colors.neutral3, fontFamily: Fonts.regular }}
-                    dropdownTextStyles={styles.ddtext}
-                    dropdownStyles={styles.ddStyles}
-                    onSelect={() => setLine(selected3)}
-                    searchPlaceholder={'Line Type'}
-                    placeholder={'Line Type'}
-                    defaultOption={lineObj}
-                  />
+                  
                   <Input
                     placeholderText='Rider Notes' multiLine={true}
                     onChangeValue={setRiderNotes}
@@ -289,7 +278,7 @@ function EditCourse({ navigation, route }: any): React.JSX.Element {
                   </TouchableOpacity>
                 </View>
               </View>
-            </Modal>
+            </Modal1>
             {show && (
               <DateTimePicker
                 value={new Date(date)}

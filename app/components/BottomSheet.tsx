@@ -12,16 +12,20 @@ import {
     PermissionsAndroid,
     Platform,
     StyleSheet,
-    Text,
+    Text, Image,
     TouchableOpacity,
     View
 } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { check, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import LinearGradient from 'react-native-linear-gradient';
+
+import { heightPercentageToDP, heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Colors } from '../theme';
 import { Fonts, Screens } from '../utils';
+import { HourseIcon, media } from '../../assets';
+import { Button, Modal } from '.';
 
 export interface Props {
     navigation: any
@@ -33,8 +37,11 @@ export interface Props {
 function Cards(props: Props): React.JSX.Element {
     const [hasGalleryPermission, setHasGalleryPermission] = useState(false);
     const { bottomSheetRef, isSkip = false, setImage, navigation, setLoader } = props
-    const snapPoints = useMemo(() => ['25%', '50%', '100%'], []);
-    const snapPoints1 = useMemo(() => ['25%', '65%', '100%'], []);
+    const snapPoints = useMemo(() => ['60%', '60%'], []);
+    const snapPoints1 = useMemo(() => ['70%', '70%'], []);
+
+    const [showMessage, setShowMessage] = useState(false);
+    const [message, setMessage] = useState('4:Select Media Type , Would you like to take a photo or record a video?');
 
     useEffect(() => {
         const requestGalleryPermission = async () => {
@@ -52,33 +59,28 @@ function Cards(props: Props): React.JSX.Element {
     }, []);
     const requestPermissions = async (forCamera = false) => {
         if (Platform.OS === 'android') {
-            // Check for Android 13 or higher
             const isAndroid13OrHigher = Platform.Version >= 33;
-            // Request Gallery Permissions (before Android 13)
             if (!isAndroid13OrHigher) {
                 const galleryGranted = await PermissionsAndroid.request(
                     PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
                 );
                 setHasGalleryPermission(galleryGranted === 'granted');
             } else {
-                // Request Permissions for Android 13 or higher
                 const galleryGranted = await PermissionsAndroid.request(
                     PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES
                 );
                 setHasGalleryPermission(galleryGranted === 'granted');
             }
-
-            // Request Camera Permissions (if needed)
             if (forCamera) {
                 const cameraGranted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
                 if (cameraGranted !== 'granted') {
-                    Alert.alert('Permission Denied', 'Camera permission is required to take photos.');
+                    setShowMessage(true)
+                    setMessage('2:Camera permission is required to take photos.')
                     return false;
                 }
             }
             return true;
         } else {
-            // Handle iOS Permissions
             const galleryResult = await check(PERMISSIONS.IOS.PHOTO_LIBRARY);
             if (galleryResult !== RESULTS.GRANTED) {
                 const galleryResponse = await request(PERMISSIONS.IOS.PHOTO_LIBRARY);
@@ -92,7 +94,8 @@ function Cards(props: Props): React.JSX.Element {
                 if (cameraResult !== RESULTS.GRANTED) {
                     const cameraResponse = await request(PERMISSIONS.IOS.CAMERA);
                     if (cameraResponse !== RESULTS.GRANTED) {
-                        Alert.alert('Permission Denied', 'Camera permission is required to take photos.');
+                        setShowMessage(true)
+                        setMessage('3:Camera permission is required to take photos.')
                         return false;
                     }
                 }
@@ -101,122 +104,109 @@ function Cards(props: Props): React.JSX.Element {
         }
     };
     const handleImagePicker = async () => {
-        const permissionGranted = await requestPermissions(true); // Pass true to indicate camera permission is needed
+        const permissionGranted = await requestPermissions(true);
         if (!permissionGranted) {
-            return; // If permission is denied, return early
-        }
-
-        if (!hasGalleryPermission) {
-            Alert.alert('Permission Denied', 'Gallery permission is required to upload images.');
             return;
         }
+        if (!hasGalleryPermission) {
+            setShowMessage(true)
+            setMessage('3:Gallery permission is required to upload images.')
+            return;
+        }
+        bottomSheetRef.current.close()
 
+        setLoader(true)
         const result = await launchImageLibrary({ mediaType: 'mixed', quality: 1 });
         if (result.assets && result.assets.length > 0) {
-            const { uri } = result.assets[0];
-            setLoader && setLoader(true)
+            setShowMessage && setShowMessage(false)
+            setLoader && setLoader(false)
             setImage ? setImage(result.assets[0]) :
                 navigation.navigate(Screens.AddCourse, { image: result.assets[0] });
             bottomSheetRef.current?.close();
         }
+        else
+        {
+            setLoader && setLoader(false);
+        }
     };
     const handleCameraLaunch = async () => {
-        const permissionGranted = await requestPermissions(true); // Pass true to indicate camera permission is needed
+        const permissionGranted = await requestPermissions(true);
         if (!permissionGranted) {
-            return; // If permission is denied, return early
+            return;
         }
+        setShowMessage(true)
+        setMessage('4:Would you like to take a photo or record a video?')
 
-        // Show confirmation dialog to select media type
-        Alert.alert(
-            'Select Media Type',
-            'Would you like to take a photo or record a video?',
-            [
-                {
-                    text: 'Cancel',
-                    style: 'cancel',
-                },
-                {
-                    text: 'Photo',
-                    onPress: () => launchCameraWithType('photo'), // Launch camera for photo
-                }, 
-                {
-                    text: 'Video',
-                    onPress: () => launchCameraWithType('video'), // Launch camera for video
-                },
-
-            ],
-            { cancelable: true }
-        );
     };
 
     // Helper function to launch the camera with the selected media type
     const launchCameraWithType = (mediaType) => {
+        bottomSheetRef.current.close()
+        // setShowMessage(true)
         const options = {
             mediaType, // This will be either 'photo' or 'video'
             quality: 1, // You can adjust the quality
         };
+        setLoader && setLoader(true)
+        setTimeout(() => {
+            launchCamera(options, (response) => {
+                if (response.assets && response.assets.length > 0) {
+                    setShowMessage && setShowMessage(false)
 
-        launchCamera(options, (response) => {
-            if (response.assets && response.assets.length > 0) {
-                setLoader && setLoader(true);
+                    setLoader && setLoader(false);
 
-                // Navigate to the AddCourse screen or set the image
-                setImage ? setImage(response.assets[0]) :
-                    navigation.navigate(Screens.AddCourse, { image: response.assets[0] });
+                    // Navigate to the AddCourse screen or set the image
+                    setImage ? setImage(response.assets[0]) :
+                        navigation.navigate(Screens.AddCourse, { image: response.assets[0] });
 
-                bottomSheetRef.current?.close(); // Close the bottom sheet after selecting media
-            }
-        });
+                    bottomSheetRef.current?.close(); // Close the bottom sheet after selecting media
+                }
+                else
+                {
+                    setLoader && setLoader(false);
+                }
+            });
+        }, 100);
+
     };
-    // const handleCameraLaunch = async () => {
-    //     const permissionGranted = await requestPermissions(true); // Pass true to indicate camera permission is needed
-    //     if (!permissionGranted) {
-    //         return; // If permission is denied, return early
-    //     }
 
-    //     bottomSheetRef.current?.close();
-    //     const options = { mediaType: 'mixed', quality: 1 };
-    //     launchCamera(options, (response) => {
-    //         if (response.assets && response.assets.length > 0) {
-    //             setLoader && setLoader(true)
-
-    //             setImage ? setImage(response.assets[0]) :
-
-    //                 navigation.navigate(Screens.AddCourse, { image: response.assets[0] });
-    //             bottomSheetRef.current?.close();
-    //         }
-    //     });
-    // };
 
     const BottomSheetOption = ({ icon, text, onPress }) => (
-        <View style={{ marginVertical: hp(3), alignItems: 'center', width: wp(60) }}>
+        <View style={{ marginVertical: hp(3), marginTop: hp(11), alignItems: 'center', width: wp(40) }}>
             <TouchableOpacity style={styles.icon} onPress={onPress}>
-                <Icon name={icon} size={hp(5)} color={Colors.neutral1} />
+                {text === 'Media' ? <Image
+                    source={media}
+                    style={styles?.ImageStyle}
+                /> : <Icon name={icon} size={hp(4.4)} color={Colors.primary4} />}
             </TouchableOpacity>
-            <Text style={styles.nameText}>{text}</Text>
+            <Text style={{ fontFamily: Fonts.regular, fontSize: hp(2), color: Colors.secondary3, marginTop: hp(1) }}>{text}</Text>
+
         </View>
     );
 
     return (
         <BottomSheet style={styles.bottomSheet}
-            ref={bottomSheetRef} index={-1} snapPoints={isSkip ? snapPoints : snapPoints1}
-            enablePanDownToClose={true} enableHandlePanningGesture={false}>
-            <View style={styles.contentContainer}>
-                <View style={{ flexDirection: 'row', width: wp(90), justifyContent: 'space-between' }}>
-                    {isSkip ? <TouchableOpacity onPress={() => {navigation.navigate(Screens.AddCourse, { image: '' }) , bottomSheetRef.current?.close() }}
-                        style={styles.skipbtn}>
-                        <Text style={[styles.nameText, { marginTop: wp(-1) }]}>
-                            Skip
-                        </Text>
-                        <Icon name={'arrow-forward'} size={hp(3)} color={Colors.secondary3}  />
-                    </TouchableOpacity> : <View style={styles.skipbtn} />}
-                    <BottomSheetOption icon="camera" text="Use Camera" onPress={handleCameraLaunch} />
-                    <View>
-                        <Icon name={'close'} size={hp(3)} color={Colors.secondary3} onPress={() => bottomSheetRef?.current?.close()} />
-                    </View>
+            handleIndicatorStyle={{ display: 'none' }} // Hide the line
+            backgroundStyle={styles.transparentBackground} // Set transparent background
+            ref={bottomSheetRef} index={-1}
+            snapPoints={isSkip ? snapPoints : snapPoints1}
+            enablePanDownToClose={true}
+            enableHandlePanningGesture={false}>
+            <Modal type={'4'} visible={showMessage} setShowMessage={setShowMessage} message={message} launchCameraWithType={launchCameraWithType} />
+
+            <Image
+                source={HourseIcon}
+                style={styles?.ImageStyle}
+            />
+            <LinearGradient colors={['#a6a6a6', Colors.neutral1]} style={[styles.contentContainer, { paddingBottom: hp(isSkip ? 8 : 20) }]}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <BottomSheetOption icon="play" text="Media" onPress={handleCameraLaunch} />
+                    <BottomSheetOption icon="images-sharp" text="Gallery" onPress={handleImagePicker} />
                 </View>
-                <BottomSheetOption icon="image" text="Upload from gallery" onPress={handleImagePicker} />
-            </View>
+                {isSkip && <Button Title='Skip' onPress={() => { navigation.navigate(Screens.AddCourse, { image: '' }), bottomSheetRef?.current?.close() }} style={styles.skipbtn} textStyle={styles.btnText} />}
+                <Button Title='Close' onPress={() => bottomSheetRef?.current?.close()} style={styles.skipbtn} textStyle={styles.btnText} />
+            </LinearGradient>
+
         </BottomSheet>
     );
 }
@@ -242,7 +232,8 @@ const styles = StyleSheet.create({
         color: Colors.secondary3,
         marginBottom: hp(2),
     },
-    skipbtn: { flexDirection: 'row', width: wp(9), alignItems: 'center', height: hp(5), justifyContent: 'center' },
+    skipbtn: { width: wp(70), height: hp(5), marginTop: hp(2), backgroundColor: Colors.secondary3 },
+    btnText: { color: Colors.neutral1 },
     nameText: {
         fontSize: hp(2),
         color: Colors.secondary3,
@@ -265,32 +256,33 @@ const styles = StyleSheet.create({
         color: Colors.neutral1,
         fontSize: hp(2),
     },
+    ImageStyle: {
+        width: hp(10),
+        height: hp(10), alignSelf: 'center',
+        borderRadius: hp(5), position: 'absolute', zIndex: 2,
+    },
     bottomSheet: {
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 12,
-        },
-        shadowOpacity: 0.58,
-        shadowRadius: 16.00,
-        elevation: 24,
-        borderTopColor: Colors.primary4,
-        borderTopWidth: wp(1),
     },
     contentContainer: {
         backgroundColor: Colors.neutral1,
         alignItems: 'center',
-        height: '45%',
-        marginTop: hp(2),
         justifyContent: 'center',
+        borderTopLeftRadius: hp(2),
+        marginTop: hp(4),
+        paddingBottom: hp(9),
+        borderTopRightRadius: hp(2), height: '100%'
     },
+
     icon: {
-        width: wp(20),
-        height: wp(20),
+        width: wp(17),
+        height: wp(17),
         borderRadius: wp(10),
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: Colors.secondary3,
+    },
+    transparentBackground: {
+        backgroundColor: 'transparent',
     },
 
 });

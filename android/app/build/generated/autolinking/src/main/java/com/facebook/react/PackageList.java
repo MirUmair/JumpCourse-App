@@ -16,6 +16,8 @@ import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.reactcommunity.rndatetimepicker.RNDateTimePickerPackage;
 // @react-native-google-signin/google-signin
 import com.reactnativegooglesignin.RNGoogleSigninPackage;
+// lottie-react-native
+import com.airbnb.android.react.lottie.LottiePackage;
 // react-native-bootsplash
 import com.zoontek.rnbootsplash.RNBootSplashPackage;
 // react-native-gesture-handler
@@ -86,6 +88,7 @@ public class PackageList {
       new AsyncStoragePackage(),
       new RNDateTimePickerPackage(),
       new RNGoogleSigninPackage(),
+      new LottiePackage(),
       new RNBootSplashPackage(),
       new RNGestureHandlerPackage(),
       new ImagePickerPackage(),

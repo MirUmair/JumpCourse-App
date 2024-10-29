@@ -22,6 +22,7 @@ import { Colors } from '../theme';
 import Video from 'react-native-video';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Loader } from '.';
+import LottieView from 'lottie-react-native';
 
 export interface CustomImage {
     image?: any
@@ -140,7 +141,9 @@ function ImageCustom(props: CustomImage): React.JSX.Element {
                                 resizeMode: 'contain',
                             }}
                         />
-                        <ActivityIndicator style={{position:'absolute',zIndex:-1}}></ActivityIndicator>
+                                    <LottieView style={{position:'absolute',zIndex:-1,width:wp(24),height:wp(24)}} source={require('../utils/imageLoading.json')} autoPlay />
+
+                        {/* <ActivityIndicator style={{position:'absolute',zIndex:-1}}></ActivityIndicator> */}
                     </View>
                     ) :
                         editable ? <TouchableOpacity style={styles.addView}

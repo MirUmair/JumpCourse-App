@@ -52,7 +52,7 @@ function Input(props: InputProps): React.JSX.Element {
                 style={[
                     styles.inputContainer,
                     style,
-                    multiLine && { height: hp(13), borderRadius: hp(3.5) },
+                    multiLine && { height: hp(13), borderRadius:multiLine?hp(2): hp(3.5) },
                     { backgroundColor: focusDesign ? isFocused ? Colors.primary4 : 'rgba(246, 246, 246, 0.5)' : Colors.primary4 } // Change color on focus
                 ]}
                 secureTextEntry={isPassword && !isPasswordVisible} // Hide/Show password based on visibility state

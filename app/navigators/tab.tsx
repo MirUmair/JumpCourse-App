@@ -1,17 +1,20 @@
 import 'react-native-reanimated';
 import * as React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Setting, Notification, Profile} from '../screens';
-import CourseStack from './CourseStack';
-import {KeyboardAvoidingView, Platform, Keyboard, View} from 'react-native';
-import {heightPercentageToDP} from 'react-native-responsive-screen';
-import {Screens} from '../utils';
-import {Colors} from '../theme';
+import { Setting, Notification, Profile } from '../screens';
+import CourseStack from './courseStack';
+import ProfileStack from './profileStack';
+
+
+import { KeyboardAvoidingView, Platform, Keyboard, View } from 'react-native';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
+import { Screens } from '../utils';
+import { Colors } from '../theme';
 
 const Tab = createBottomTabNavigator();
 
-function CustomTabBarIcon({name, color, size}) {
+function CustomTabBarIcon({ name, color, size }) {
   return <Icon name={name} size={size} color={color} />;
 }
 
@@ -19,16 +22,16 @@ function BottomTabs() {
   return (
     // Wrapping the Bottom Tab Navigation inside KeyboardAvoidingView
     <KeyboardAvoidingView
-      style={{flex: 1}}
+      style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : null}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}>
       <Tab.Navigator
-        screenOptions={({route}) => ({
-          tabBarIcon: ({focused, color, size}) => {
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
             let iconName;
             if (route.name === Screens.CourseStack) {
               iconName = focused ? 'home' : 'home-outline';
-            } else if (route.name === Screens.Profile) {
+            } else if (route.name === Screens.ProfileStack) {
               iconName = focused ? 'person' : 'person-outline';
             } else if (route.name === Screens.Notification) {
               iconName = focused ? 'notifications' : 'notifications-outline';
@@ -61,8 +64,8 @@ function BottomTabs() {
           }}
         />
         <Tab.Screen
-          name={Screens.Profile}
-          component={Profile}
+          name={Screens.ProfileStack}
+          component={ProfileStack}
           options={{
             headerShown: false,
           }}

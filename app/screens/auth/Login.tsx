@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { BackHandler, ImageBackground, Linking, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'; // Import BackHandler
+import { BackHandler, ImageBackground, Keyboard, Linking, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'; // Import BackHandler
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { useDispatch } from 'react-redux';
 import { bg1 } from '../../../assets';
@@ -34,6 +34,8 @@ function Login({ navigation }: Props): React.JSX.Element {
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [message, setMessage] = useState('');
+  const [showMessage, setShowMessage] = useState(false);
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.neutral2 : Colors.neutral1,
   };
@@ -66,6 +68,7 @@ function Login({ navigation }: Props): React.JSX.Element {
         setLoader,
       };
       //
+      setLoader(true)
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
       const raw = JSON.stringify({
@@ -127,6 +130,7 @@ function Login({ navigation }: Props): React.JSX.Element {
   };
 
   const handleLogin = async () => {
+    Keyboard.dismiss()
     setEmailError('');
     setPasswordError('');
     let isValid = true;
@@ -146,18 +150,23 @@ function Login({ navigation }: Props): React.JSX.Element {
       password,
       navigation, // Pass the navigation object to the thunk
       setLoader,  // Pass the loader control function to the thunk
+      setShowMessage,
+      setMessage
     };
     dispatch(login(loginData));
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
+    <SafeAreaView  >
+      <StatusBar
+        barStyle={'light-content'}
+        backgroundColor={Colors.secondary3}
+      />
       <Loader loading={loader} />
+      <Modal visible={showMessage} setShowMessage={setShowMessage} message={message} />
+
       <ImageBackground source={bg1} resizeMode="cover" style={styles.image}>
-        <StatusBar
-          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-          backgroundColor={backgroundStyle.backgroundColor}
-        />
+        
         <View style={{ marginTop: hp(50) }}>
           <Input
             focusDesign={true}
@@ -177,7 +186,6 @@ function Login({ navigation }: Props): React.JSX.Element {
           {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
           <Button onPress={handleLogin} Title="Sign in" />
           <Button leftIcon={true} onPress={googleSignUp} Title="Sign in with Google" />
-
           <TouchableOpacity
             onPress={() => {
               navigation.navigate('ForgotPassword');
@@ -215,7 +223,7 @@ function Login({ navigation }: Props): React.JSX.Element {
 
           </TouchableOpacity>
           <Text style={[{
-            marginBottom: hp(5),
+            marginBottom: hp(7),
             fontFamily: Fonts.regular, fontSize: wp(3),
             color: Colors.neutral1, textAlign: 'center'
           }]}>
@@ -259,7 +267,6 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     alignSelf: 'center',
-    marginBottom: hp(2),
     fontSize: 14,
   },
 });

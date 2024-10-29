@@ -1,7 +1,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
  
-export const BaseUrlLocal = 'http://192.168.100.74:5000/api/'
+export const BaseUrlLocal = 'http://192.168.0.208:5000/api/'
 export const BaseUrlLive = "https://coursejump-backend.onrender.com/api/"
 export const BaseUrl = BaseUrlLive
 export const Screens = {
@@ -9,6 +9,8 @@ export const Screens = {
   Login: "Login",
   Courses: "Courses",
   CourseStack: "CourseStack",
+  ProfileStack: "ProfileStack",
+
   AddCourse: "AddCourse",
   ForgotPassword: "ForgotPassword",
   ResetPassword: "ResetPassword",
@@ -17,6 +19,7 @@ export const Screens = {
   Home: "Home",
   Notification: "Notification",
   Profile: "Profile",
+  EditProfile:"EditProfile",
   Setting: "Setting",
   CourseDetails: "CourseDetails",
   Camera: "Camera",

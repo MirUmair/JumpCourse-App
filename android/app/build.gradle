@@ -72,7 +72,7 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 project.ext.vectoricons = [
-    iconFontNames: [ 'Ionicons.ttf', 'FontAwesome.ttf' ] // Specify font files
+    iconFontNames: [ 'Ionicons.ttf', 'FontAwesome.ttf','Entypo.ttf' ] // Specify font files
 ]
 android {
     ndkVersion rootProject.ext.ndkVersion

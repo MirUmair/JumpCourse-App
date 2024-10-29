@@ -2,7 +2,7 @@
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
-import { Alert, ImageBackground, Linking, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ImageBackground, Keyboard, Linking, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { useDispatch } from 'react-redux';
 import { bg5 } from '../../../assets';
@@ -59,6 +59,7 @@ function SignUp({ navigation }: Props): React.JSX.Element {
       console.log('User Info: ', userInfo.data?.user);
       let user = userInfo.data?.user
       if (user) {
+        setLoader(true)
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         const raw = JSON.stringify({
@@ -78,8 +79,7 @@ function SignUp({ navigation }: Props): React.JSX.Element {
         fetch(BaseUrl + "users/register", requestOptions)
           .then((response) => response.json())
           .then(async (result) => {
-            console.log(result)
-            if (result?.message == 'User already exists') {
+             if (result?.message == 'User already exists') {
               const loginData = {
                 email: user.email,
                 password: user.id,
@@ -89,9 +89,9 @@ function SignUp({ navigation }: Props): React.JSX.Element {
               dispatch(login(loginData));
             }
             else {
-              Alert.alert('User Registered Successfully!');
-              // setMessage('1:User Registered Successfully!')
-              // setShowMessage(true)
+              // Alert.alert('User Registered Successfully!');
+              setMessage('1:User Registered Successfully!')
+              setShowMessage(true)
               await AsyncStorage.setItem('userToken', result.token);
               navigation.navigate(Screens.Video, { targetScreen: Screens.Home });
             }
@@ -113,6 +113,8 @@ function SignUp({ navigation }: Props): React.JSX.Element {
     }
   };
   const handleSignUp = () => {
+    Keyboard.dismiss()
+    setLoader(true)
     setEmailError('');
     setfirstnameError('');
     setlastnameError('');
@@ -149,7 +151,11 @@ function SignUp({ navigation }: Props): React.JSX.Element {
   };
 
   return (
-    <SafeAreaView  >
+    <SafeAreaView keyboardShouldPersistTaps={'handled'} >
+       <StatusBar
+                barStyle={'light-content'}
+                backgroundColor={Colors.secondary3}
+            />
       <Loader loading={loader} />
       <Modal visible={showMessage} setShowMessage={setShowMessage} message={message}/>
 
@@ -169,9 +175,9 @@ function SignUp({ navigation }: Props): React.JSX.Element {
           <Button onPress={handleSignUp} Title="Sign Up" />
           <View style={{ flexDirection: 'row', marginTop: hp(3), alignSelf: 'center', width: wp(90), alignItems: 'center', justifyContent: 'center' }}>
             <View style={styles.line} />
-            {/* OR text */}
+             
             <Text style={styles.bottomText}>OR</Text>
-            {/* Right line */}
+             
             <View style={styles.line} />
 
           </View>
@@ -252,7 +258,7 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     alignSelf: 'center',
-    marginBottom: hp(2),
+    marginBottom: hp(0.5),
     fontSize: 14,
   },
 });

@@ -14,17 +14,20 @@ import {
     View
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
 
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
-import { Fonts } from '../utils';
+import { Fonts, Screens } from '../utils';
 import { Colors } from '../theme';
 
 export interface buttonProps {
-
     Title?: string
     backIcon?: boolean
+    rightIcon?: boolean,
     navigation?: any
     onPressBack?: any
+    onPressRight?: any
     icon?: string
 }
 
@@ -32,10 +35,13 @@ function Header(props: buttonProps): React.JSX.Element {
     const {
         Title,
         icon = 'chevron-back-circle',
-        navigation,
+        navigation, rightIcon = false,
         backIcon = true,
+        onPressRight = () => navigation.navigate(Screens.EditProfile),
         onPressBack = () => navigation.goBack()
     } = props
+
+
     return (
         <View style={styles.container}>
             <StatusBar
@@ -49,6 +55,11 @@ function Header(props: buttonProps): React.JSX.Element {
             }
             <Text style={styles.text}>{Title}
             </Text>
+            {rightIcon ? <TouchableOpacity onPress={onPressRight} style={[styles.backView, { alignItems: 'flex-start' }]}>
+                <FontAwesome name={icon} size={hp(3.5)} color={'#fff'} />
+            </TouchableOpacity> :
+                <View style={styles.backView} />
+            }
         </View>
 
     );
@@ -64,13 +75,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     backView: {
-        width: wp(10),
+        width: wp(13),
         alignItems: 'flex-end'
     },
     text: {
         fontSize: hp(2.5),
         fontFamily: Fonts.bold,
-        width: wp(80),
+        width: wp(76),
         textAlign: 'center',
         color: Colors.neutral1,
 
