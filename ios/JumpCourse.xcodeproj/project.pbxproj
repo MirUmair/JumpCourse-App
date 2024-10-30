@@ -13,6 +13,12 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-JumpCourse-JumpCourseTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-JumpCourse-JumpCourseTests.a */; };
+		80D2F55D2CC29B150021F4F8 /* Now-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 80D2F5572CC29B140021F4F8 /* Now-Thin.otf */; };
+		80D2F55E2CC29B150021F4F8 /* Now-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 80D2F5582CC29B150021F4F8 /* Now-Black.otf */; };
+		80D2F55F2CC29B150021F4F8 /* Now-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 80D2F5592CC29B150021F4F8 /* Now-Bold.otf */; };
+		80D2F5602CC29B150021F4F8 /* Now-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 80D2F55A2CC29B150021F4F8 /* Now-Regular.otf */; };
+		80D2F5612CC29B150021F4F8 /* Now-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 80D2F55B2CC29B150021F4F8 /* Now-Light.otf */; };
+		80D2F5622CC29B150021F4F8 /* Now-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 80D2F55C2CC29B150021F4F8 /* Now-Medium.otf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A00B4C9359ADECC0316924D1 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = CA25F496771ED07DBE1F46C1 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
@@ -43,9 +49,15 @@
 		5709B34CF0A7D63546082F79 /* Pods-JumpCourse.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JumpCourse.release.xcconfig"; path = "Target Support Files/Pods-JumpCourse/Pods-JumpCourse.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-JumpCourse-JumpCourseTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JumpCourse-JumpCourseTests.debug.xcconfig"; path = "Target Support Files/Pods-JumpCourse-JumpCourseTests/Pods-JumpCourse-JumpCourseTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-JumpCourse.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-JumpCourse.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		80D2F5572CC29B140021F4F8 /* Now-Thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Now-Thin.otf"; path = "../../JumpCourse/JumpCourse/assets/fonts/Now-Thin.otf"; sourceTree = "<group>"; };
+		80D2F5582CC29B150021F4F8 /* Now-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Now-Black.otf"; path = "../../JumpCourse/JumpCourse/assets/fonts/Now-Black.otf"; sourceTree = "<group>"; };
+		80D2F5592CC29B150021F4F8 /* Now-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Now-Bold.otf"; path = "../../JumpCourse/JumpCourse/assets/fonts/Now-Bold.otf"; sourceTree = "<group>"; };
+		80D2F55A2CC29B150021F4F8 /* Now-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Now-Regular.otf"; path = "../../JumpCourse/JumpCourse/assets/fonts/Now-Regular.otf"; sourceTree = "<group>"; };
+		80D2F55B2CC29B150021F4F8 /* Now-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Now-Light.otf"; path = "../../JumpCourse/JumpCourse/assets/fonts/Now-Light.otf"; sourceTree = "<group>"; };
+		80D2F55C2CC29B150021F4F8 /* Now-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Now-Medium.otf"; path = "../../JumpCourse/JumpCourse/assets/fonts/Now-Medium.otf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = JumpCourse/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-JumpCourse-JumpCourseTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JumpCourse-JumpCourseTests.release.xcconfig"; path = "Target Support Files/Pods-JumpCourse-JumpCourseTests/Pods-JumpCourse-JumpCourseTests.release.xcconfig"; sourceTree = "<group>"; };
-		CA25F496771ED07DBE1F46C1 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = JumpCourse/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		CA25F496771ED07DBE1F46C1 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = JumpCourse/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -121,6 +133,12 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				80D2F5582CC29B150021F4F8 /* Now-Black.otf */,
+				80D2F5592CC29B150021F4F8 /* Now-Bold.otf */,
+				80D2F55B2CC29B150021F4F8 /* Now-Light.otf */,
+				80D2F55C2CC29B150021F4F8 /* Now-Medium.otf */,
+				80D2F55A2CC29B150021F4F8 /* Now-Regular.otf */,
+				80D2F5572CC29B140021F4F8 /* Now-Thin.otf */,
 				13B07FAE1A68108700A75B9A /* JumpCourse */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* JumpCourseTests */,
@@ -246,9 +264,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80D2F5622CC29B150021F4F8 /* Now-Medium.otf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				80D2F55E2CC29B150021F4F8 /* Now-Black.otf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				A00B4C9359ADECC0316924D1 /* PrivacyInfo.xcprivacy in Resources */,
+				80D2F55D2CC29B150021F4F8 /* Now-Thin.otf in Resources */,
+				80D2F5612CC29B150021F4F8 /* Now-Light.otf in Resources */,
+				80D2F5602CC29B150021F4F8 /* Now-Regular.otf in Resources */,
+				80D2F55F2CC29B150021F4F8 /* Now-Bold.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -22,7 +22,10 @@ type RootStackParamList = {
   SignUp: undefined;
 };
 
-type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
+type LoginScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'Login'
+>;
 type LoginScreenRouteProp = RouteProp<RootStackParamList, 'Login'>;
 
 type Props = {
@@ -52,7 +55,10 @@ function Login({ navigation }: Props): React.JSX.Element {
       }
       return false;
     };
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
     return () => backHandler.remove();
   }, [navigation]);
 
@@ -60,7 +66,7 @@ function Login({ navigation }: Props): React.JSX.Element {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      let user = userInfo.data?.user
+      let user = userInfo.data?.user;
       const userData = {
         email: user?.email,
         password: user?.id,
@@ -71,20 +77,20 @@ function Login({ navigation }: Props): React.JSX.Element {
         setLoader(true)
       }
       const myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append('Content-Type', 'application/json');
       const raw = JSON.stringify({
         email: user?.email,
         password: user?.id,
       });
       const requestOptions = {
-        method: "POST",
+        method: 'POST',
         headers: myHeaders,
         body: raw,
-        redirect: "follow"
+        redirect: 'follow',
       };
-      fetch(BaseUrl + "users/login", requestOptions)
-        .then((response) => response.json())
-        .then((result) => {
+      fetch(BaseUrl + 'users/login', requestOptions)
+        .then(response => response.json())
+        .then(result => {
           if (result?.message === 'User not found') {
             if (user) {
               const userData = {
@@ -96,11 +102,10 @@ function Login({ navigation }: Props): React.JSX.Element {
                 navigation,
                 setLoader,
               };
-              dispatch(signUp(userData))
+              dispatch(signUp(userData));
             }
-          }
-          else {
-            dispatch(login(userData))
+          } else {
+            dispatch(login(userData));
           }
         })
         .catch((error) => { setLoader(false), console.error(error) });
@@ -179,7 +184,9 @@ function Login({ navigation }: Props): React.JSX.Element {
             value={email}
             keyboardType="email-address"
           />
-          {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+          {emailError ? (
+            <Text style={styles.errorText}>{emailError}</Text>
+          ) : null}
           <Input
             focusDesign={true}
             onChangeValue={setPassword}
@@ -187,7 +194,9 @@ function Login({ navigation }: Props): React.JSX.Element {
             value={password}
             isPassword={true}
           />
-          {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+          {passwordError ? (
+            <Text style={styles.errorText}>{passwordError}</Text>
+          ) : null}
           <Button onPress={handleLogin} Title="Sign in" />
           <Button leftIcon={true} onPress={googleSignUp} Title="Sign in with Google" />
           <TouchableOpacity
@@ -208,9 +217,7 @@ function Login({ navigation }: Props): React.JSX.Element {
             <Text style={[styles.topText, styles.dontHav]}>
               Don't have an account?{' '}
             </Text>
-            <Text style={styles.topText}>
-              SignUp
-            </Text>
+            <Text style={styles.topText}>SignUp</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.linking}
