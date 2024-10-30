@@ -1,11 +1,11 @@
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View, ScrollView, Alert, Dimensions } from 'react-native';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { map } from '../../../../assets';
+import { Dimensions, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { Image, ObstaclesHorizantal } from '../../../components';
 import Header from '../../../components/Header';
-import { BaseUrlImage, Fonts } from '../../../utils';
 import { Colors } from '../../../theme';
+import { Fonts } from '../../../utils';
 
 type RootStackParamList = {
   Home: undefined;
@@ -16,31 +16,11 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'H
 
 type Props = {
   navigation: HomeScreenNavigationProp;
+  route: any
 };
 
 function CourseDetail({ navigation, route }: Props): React.JSX.Element {
   const { course } = route.params || {};
-  console.log(JSON.stringify(course))
-  const [imageHeight, setImageHeight] = useState(200); // Default image height
-
-  const [rotation, setRotation] = useState('0deg'); // Default rotation
-  const screenWidth = Dimensions.get('window').width; // Get screen width
-
-  const handleImageLoad = (event) => {
-    const { width, height } = event.nativeEvent.source;
-    console.log(width, height)
-    const aspectRatio = height / width;
-    const calculatedHeight = screenWidth * aspectRatio;
-
-    // Update image height based on calculated value
-    setImageHeight(calculatedHeight);
-    // Rotate image based on its dimensions
-    if (width > height) {
-      setRotation('0deg'); // Rotate 90 degrees for landscape images
-    } else {
-      setRotation('90deg'); // No rotation for portrait images
-    }
-  };
   return (
     <SafeAreaView style={styles.Container}>
       <Header Title='Course Details' navigation={navigation} />
@@ -55,10 +35,6 @@ function CourseDetail({ navigation, route }: Props): React.JSX.Element {
             <Text style={styles.textStyle}>Date:</Text>
             <Text style={styles.textStyle}>{course.date}</Text>
           </View>
-          {/* <View style={styles.CourseDetail}>
-            <Text style={styles.textStyle}>Designed By:</Text>
-            <Text style={styles.textStyle}>{course.courseDesigner}</Text>
-          </View> */}
           <View style={styles.CourseDetail}>
             <Text style={styles.textStyle}>Venue:</Text>
             <Text style={styles.textStyle}>{course.venue}</Text>
@@ -99,7 +75,6 @@ const styles = StyleSheet.create({
   topImage: {
     resizeMode: 'contain',
     maxHeight: hp(45),
-    // backgroundColor: Colors.primary4
   },
   CourseDetail: {
     flexDirection: 'row',

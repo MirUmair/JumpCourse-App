@@ -1,38 +1,24 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { RouteProp } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
-import {RouteProp} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {
-  BackHandler,
-  ImageBackground,
-  Linking,
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from 'react-native'; // Import BackHandler
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
-import {useDispatch} from 'react-redux';
-import {bg1} from '../../../assets';
-import {Button, Input, Loader, Modal} from '../../components';
-import {login, signUp} from '../../redux/features/userSlice'; // Import the login action
-import {AppDispatch} from '../../redux/store'; // Import types for state and dispatch
-import {BaseUrl, Fonts, Screens} from '../../utils'; // Fonts
-import {Colors} from '../../theme';
+  BackHandler, ImageBackground, Keyboard, Linking, SafeAreaView, StatusBar, StyleSheet,
+  Text, TouchableOpacity, useColorScheme, View
+} from 'react-native';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { useDispatch } from 'react-redux';
+import { bg1 } from '../../../assets';
+import { Button, Input, Loader, Modal } from '../../components';
+import { login, signUp } from '../../redux/features/userSlice';
+import { AppDispatch } from '../../redux/store';
+import { BaseUrl, Fonts, GoogleKey, Screens } from '../../utils';
+import { Colors } from '../../theme';
 
 type RootStackParamList = {
   Login: undefined;
   ForgotPassword: undefined;
-  Home: undefined; // Assuming Home is part of navigation
+  Home: undefined;
   SignUp: undefined;
 };
 
@@ -47,23 +33,19 @@ type Props = {
   route: LoginScreenRouteProp;
 };
 
-function Login({navigation}: Props): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+function Login({ navigation }: Props): React.JSX.Element {
   const [loader, setLoader] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.neutral2 : Colors.neutral1,
-  };
+  const [message, setMessage] = useState('');
+  const [showMessage, setShowMessage] = useState(false);
+
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     GoogleSignin.configure({
-      iosClientId:
-        '150267601582-6vs2t1d5j9331ihslkn3bmkbua8jepbg.apps.googleusercontent.com', // your iOS client ID
-      webClientId:
-        '150267601582-1ukkjos3mortbdpe8o5bude67cu278e5.apps.googleusercontent.com', //'231913951546-cgs1o3mdmn5uv6jcpeusgqarh7quajvi.apps.googleusercontent.com', // From the Google Cloud Console
+      webClientId: GoogleKey,
       offlineAccess: true,
     });
     const backAction = () => {
@@ -91,7 +73,9 @@ function Login({navigation}: Props): React.JSX.Element {
         navigation,
         setLoader,
       };
-      //
+      if (user) {
+        setLoader(true)
+      }
       const myHeaders = new Headers();
       myHeaders.append('Content-Type', 'application/json');
       const raw = JSON.stringify({
@@ -124,8 +108,9 @@ function Login({navigation}: Props): React.JSX.Element {
             dispatch(login(userData));
           }
         })
-        .catch(error => console.error(error));
+        .catch((error) => { setLoader(false), console.error(error) });
     } catch (error: any) {
+      setLoader(false)
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         console.log('User cancelled the login');
       } else if (error.code === statusCodes.IN_PROGRESS) {
@@ -138,18 +123,17 @@ function Login({navigation}: Props): React.JSX.Element {
     }
   };
 
-  // Email Validation RegEx (basic validation)
   const validateEmail = (email: string) => {
     const emailRegEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegEx.test(email);
   };
 
-  // Password validation (minimum 6 characters)
   const validatePassword = (password: string) => {
     return password.length >= 6;
   };
 
   const handleLogin = async () => {
+    Keyboard.dismiss()
     setEmailError('');
     setPasswordError('');
     let isValid = true;
@@ -167,21 +151,32 @@ function Login({navigation}: Props): React.JSX.Element {
     const loginData = {
       email,
       password,
-      navigation, // Pass the navigation object to the thunk
-      setLoader, // Pass the loader control function to the thunk
+      navigation,
+      setLoader,
+      setShowMessage,
+      setMessage
     };
     dispatch(login(loginData));
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
+    <SafeAreaView  >
+      <StatusBar
+        barStyle={'light-content'}
+        backgroundColor={Colors.secondary3}
+      />
       <Loader loading={loader} />
-      <ImageBackground source={bg1} resizeMode="cover" style={styles.image}>
-        <StatusBar
-          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-          backgroundColor={backgroundStyle.backgroundColor}
-        />
-        <View style={{marginTop: hp(50)}}>
+      <Modal
+        visible={showMessage}
+        setShowMessage={setShowMessage}
+        message={message} />
+
+      <ImageBackground
+        source={bg1}
+        resizeMode="cover"
+        style={styles.image}>
+
+        <View style={styles.inputView}>
           <Input
             focusDesign={true}
             onChangeValue={setEmail}
@@ -203,64 +198,41 @@ function Login({navigation}: Props): React.JSX.Element {
             <Text style={styles.errorText}>{passwordError}</Text>
           ) : null}
           <Button onPress={handleLogin} Title="Sign in" />
-          <Button
-            leftIcon={true}
-            onPress={googleSignUp}
-            Title="Sign in with Google"
-          />
-
+          <Button leftIcon={true} onPress={googleSignUp} Title="Sign in with Google" />
           <TouchableOpacity
             onPress={() => {
               navigation.navigate('ForgotPassword');
-            }}>
-            <Text style={[styles.bottomText, {marginRight: '2%'}]}>
+            }}
+          >
+            <Text style={[styles.bottomText, styles.right]}>
               Forgot Password?
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={{flexDirection: 'row', alignSelf: 'center'}}
+            style={styles.dontText}
             onPress={() => {
-              navigation.navigate(Screens.SignUp);
-            }}>
-            <Text style={[styles.topText, {fontFamily: Fonts.regular}]}>
+              navigation.navigate(Screens.SignUp)
+            }}
+          >
+            <Text style={[styles.topText, styles.dontHav]}>
               Don't have an account?{' '}
             </Text>
             <Text style={styles.topText}>SignUp</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              alignSelf: 'center',
-              marginTop: hp(1),
-            }}
+            style={styles.linking}
             onPress={() => {
-              Linking.openURL('https://www.spowartholm.ca/');
-            }}>
-            <Text
-              style={[
-                styles.topText,
-                {fontFamily: Fonts.regular, fontSize: wp(3)},
-              ]}>
+              Linking.openURL('https://www.spowartholm.ca/')
+            }}
+          >
+            <Text style={[styles.topText, styles.media]}>
               Media by{' '}
             </Text>
-            <Text
-              style={[
-                styles.topText,
-                {textDecorationLine: 'underline', fontSize: wp(3)},
-              ]}>
+            <Text style={[styles.topText, styles.spowart]}>
               SpowartHolm
             </Text>
           </TouchableOpacity>
-          <Text
-            style={[
-              {
-                marginBottom: hp(5),
-                fontFamily: Fonts.regular,
-                fontSize: wp(3),
-                color: Colors.neutral1,
-                textAlign: 'center',
-              },
-            ]}>
+          <Text style={styles.version}>
             © 2024, used with permission.
           </Text>
         </View>
@@ -278,12 +250,39 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
   },
+  dontText: {
+    flexDirection: 'row',
+    alignSelf: 'center'
+  },
+  dontHav: {
+    fontFamily: Fonts.regular
+  },
   topText: {
     alignSelf: 'center',
     color: '#fff',
     fontSize: 17,
     fontFamily: Fonts.bold,
     marginTop: hp(2),
+  },
+  version: {
+    marginBottom: hp(7),
+    fontFamily: Fonts.regular,
+    fontSize: wp(3),
+    color: Colors.neutral1,
+    textAlign: 'center'
+  },
+  media: {
+    fontFamily: Fonts.regular,
+    fontSize: wp(3),
+  },
+  spowart: {
+    textDecorationLine: 'underline',
+    fontSize: wp(3)
+  },
+  linking: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    marginTop: hp(1)
   },
   bottomText: {
     fontSize: 20,
@@ -293,15 +292,23 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
   },
+  inputView: {
+    marginTop: hp(50)
+  },
+  right: {
+    marginRight: '2%'
+  },
   image: {
     height: '100%',
     width: '100%',
     justifyContent: 'center',
   },
+  imageView: {
+    marginTop: hp(50)
+  },
   errorText: {
     color: 'red',
     alignSelf: 'center',
-    marginBottom: hp(2),
     fontSize: 14,
   },
 });

@@ -1,37 +1,31 @@
 import React, { useState } from 'react';
 import {
-  Alert,
   ImageBackground,
+  Keyboard,
   Linking,
   SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
-  useColorScheme,
-  View,
+  View
 } from 'react-native';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { bg2 } from '../../../assets';
-import { BaseUrl, Fonts, Screens } from '../../utils';
-import { useDispatch } from 'react-redux';
-import { requestPasswordReset } from '../../redux/features/userSlice';
-import { Loader, Input, Button } from '../../components';
-import axios from 'axios';
+import { Button, Input, Loader, Modal } from '../../components';
 import { Colors } from '../../theme';
+import { BaseUrl, Fonts, Screens } from '../../utils';
 
 function Login({ navigation }): React.JSX.Element {
-  // Move dispatch inside the function component
-  const dispatch = useDispatch();
-
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   const [loader, setLoader] = useState(false);
 
-  const isDarkMode = useColorScheme() === 'dark';
+  const [message, setMessage] = useState('');
+  const [showMessage, setShowMessage] = useState(false);
 
   const handlePasswordResetRequest = async () => {
+    Keyboard.dismiss()
     setLoader(true);
 
     // Validate email
@@ -53,50 +47,69 @@ function Login({ navigation }): React.JSX.Element {
       body: raw,
       redirect: "follow"
     };
-return
-    fetch(BaseUrl + "users/requestReset")
+    fetch(BaseUrl + "users/requestReset", requestOptions)
       .then((response) => response.json())
       .then((result) => {
+        console.log(result)
         if (result.error) {
-          setLoader(false), Alert.alert('Failed', result.message), console.log(result.message)
+          setMessage('2:' + result.message)
+          setShowMessage(true)
+          setLoader(false)
         }
         else {
-          setLoader(false), Alert.alert('Success', 'Six digit code sent to your email'), navigation.navigate(Screens.ResetPassword, { email }), console.log(result.message)
+          setLoader(false),
+            setMessage('1:Six digit code sent to your email')
+          setShowMessage(true)
+          setTimeout(() => {
+            navigation.navigate(Screens.ResetPassword, { email }), console.log(result.message)
+          }, 2000);
         }
-
       })
       .catch((error) => { setLoader(false), console.error(error) });
-
   };
 
-  // Email Validation RegEx (basic validation)
   const validateEmail = (email: string) => {
     const emailRegEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegEx.test(email);
   };
 
   return (
-    <SafeAreaView  >
-      <Loader loading={loader} />
-      <ImageBackground source={bg2} resizeMode="cover" style={styles.image}>
-        <StatusBar
-          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        />
-        <View style={{ marginTop: hp('68%') }}>
+    <SafeAreaView>
+      <StatusBar
+        barStyle={'light-content'}
+        backgroundColor={Colors.secondary3}
+      />
+      <Modal
+        visible={showMessage}
+        setShowMessage={setShowMessage}
+        message={message} />
+      <Loader
+        loading={loader} />
+      <ImageBackground
+        source={bg2}
+        resizeMode="cover"
+        style={styles.image}>
+        <View style={styles.topView}>
         </View>
-        <Input onChangeValue={setEmail} value={email} focusDesign={true} placeholderText={'Email'} />
-        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-
-        <Button Title='Submit' onPress={handlePasswordResetRequest} />
-        <Text style={[styles.bottomText, { marginRight: '2%' }]}>
+        <Input
+          onChangeValue={setEmail}
+          value={email}
+          focusDesign={true}
+          placeholderText={'Email'} />
+        {emailError ?
+          <Text style={styles.errorText}>{emailError}</Text> : null}
+        <Button
+          Title='Submit'
+          onPress={handlePasswordResetRequest} />
+        <Text style={[styles.bottomText, styles.right]}>
         </Text>
         <TouchableOpacity
-          style={{ flexDirection: 'row', alignSelf: 'center' }}
+          style={styles.dontText}
           onPress={() => {
             navigation.navigate('SignUp');
           }}
         >
-          <Text style={[styles.topText, { fontFamily: Fonts.regular }]}>
+          <Text style={[styles.topText, styles.font]}>
             Don't have an account?
           </Text>
           <Text style={styles.topText}>
@@ -104,24 +117,19 @@ return
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={{ flexDirection: 'row', alignSelf: 'center', marginTop: hp(6) }}
+          style={styles.link}
           onPress={() => {
             Linking.openURL('https://www.spowartholm.ca/')
           }}
         >
-          <Text style={[styles.topText, { fontFamily: Fonts.regular, fontSize: wp(3), }]}>
+          <Text style={[styles.topText, styles.mediaText]}>
             Media by{' '}
           </Text>
-          <Text style={[styles.topText, { textDecorationLine: 'underline', fontSize: wp(3) }]}>
+          <Text style={[styles.topText, styles.spowart]}>
             SpowartHolm
           </Text>
-
         </TouchableOpacity>
-        <Text style={[{
-          marginBottom: hp(6),
-          fontFamily: Fonts.regular, fontSize: wp(3),
-          color: Colors.neutral1, textAlign: 'center'
-        }]}>
+        <Text style={[styles.version]}>
           © 2024, used with permission.
         </Text>
       </ImageBackground>
@@ -149,7 +157,26 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.bold,
     textAlign: 'center',
   },
-  bottomView: { flexDirection: 'row', width: '60%', alignSelf: 'center', marginTop: '5%' },
+  mediaText: {
+    fontFamily: Fonts.regular,
+    fontSize: wp(3),
+  },
+  spowart: {
+    textDecorationLine: 'underline',
+    fontSize: wp(3)
+  },
+  link: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    marginTop: hp(6)
+  },
+  bottomView:
+  {
+    flexDirection: 'row',
+    width: '60%',
+    alignSelf: 'center',
+    marginTop: '5%'
+  },
   errorText: {
     color: 'red',
     alignSelf: 'center',
@@ -163,10 +190,32 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center'
   },
+  right: {
+
+    marginRight: '2%'
+  },
+  font: {
+    fontFamily: Fonts.regular
+  },
+  dontText: {
+    flexDirection: 'row',
+    alignSelf: 'center'
+  },
   image: {
     height: '100%', width: '100%',
     justifyContent: 'center',
   },
+  topView: {
+    marginTop: hp('68%')
+  },
+  version: {
+    marginBottom: hp(8),
+    fontFamily: Fonts.regular,
+    fontSize: wp(3),
+    color: Colors.neutral1,
+    textAlign: 'center'
+  }
+
 });
 
 export default Login;

@@ -29,7 +29,6 @@ function CourseStack(props: AppProps) {
         name={Screens.CourseDetails}
         component={CourseDetails}
       />
-
       <CourseStackNav.Screen
         name={Screens.AddCourse}
         component={AddCourse}

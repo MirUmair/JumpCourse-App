@@ -37,7 +37,7 @@ const saveTokenToStorage = async (data: { token: string, user: User }) => {
 const getTokenFromStorage = async () => {
   try {
     const token = await AsyncStorage.getItem('userToken');
-    console.log('Retrieved token from AsyncStorage:', token);  // Debugging log
+    console.log('Retrieved token from AsyncStorage:', token);  
     return token;
   } catch (error) {
     console.error('Error retrieving token:', error);
@@ -47,7 +47,7 @@ const getTokenFromStorage = async () => {
 
 const removeTokenFromStorage = async () => {
   try {
-    console.log('Removing token from AsyncStorage');  // Debugging log
+    console.log('Removing token from AsyncStorage');  
     await AsyncStorage.removeItem('userToken');
     await AsyncStorage.removeItem('user');
   } catch (error) {
@@ -64,19 +64,23 @@ interface User {
 }
 
 interface userData extends Omit<User, 'id'> {
-  navigation: any; // Add navigation here as part of the argument
-  setLoader: (value: boolean) => void; // Function to control loader in component
+  navigation: any;
+  setLoader: (value: boolean) => void; 
+  setShowMessage: (value: boolean) => void;
+  setMessage: (value: String) => void;
 }
 
 interface LoginData extends Omit<User, 'username' | 'id'> {
-  navigation: any; // Add navigation as part of the login arguments
-  setLoader: (value: boolean) => void; // Function to control loader in the component
+  navigation: any; 
+  setLoader: (value: boolean) => void; 
+  setShowMessage: (value: boolean) => void;
+  setMessage: (value: String) => void;
 }
 export const signUp = createAsyncThunk<void, userData>(
   'user/signUp',
   async (userData, { rejectWithValue }) => {
     const { navigation, setLoader, setShowMessage,
-      setMessage, ...userDetails } = userData; // Destructure to extract navigation and loader
+      setMessage, ...userDetails } = userData; 
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -95,28 +99,22 @@ export const signUp = createAsyncThunk<void, userData>(
       }
       setShowMessage(true)
       setMessage('1:User Registered Successfully!')
-      // Alert.alert('User Registered Successfully!');
-      if (userDetails?.type === 'social') {
+       if (userDetails?.type === 'social') {
         await saveTokenToStorage(response.data);
         navigation.navigate(Screens.Video, { targetScreen: Screens.Home });
       }
       else {
         setTimeout(() => {
           navigation.navigate(Screens.Login);
-
         }, 1500);
       }
       setLoader(false);
-      return response.data; // Return user data
+      return response.data;  
     } catch (error: any) {
       setLoader(false);
       setShowMessage(true)
-
       const errorMessage = error.response?.data?.message || 'Sign Up Failed. Please try again.';
       setMessage('3:' + errorMessage + '!')
-
-      // Alert.alert('SignUp Failed', errorMessage);
-      console.log(errorMessage)
       return rejectWithValue(errorMessage);
     }
   }
@@ -127,7 +125,8 @@ export const signUp = createAsyncThunk<void, userData>(
 export const login = createAsyncThunk<void, LoginData>(
   'user/login',
   async (loginData, { rejectWithValue }) => {
-    const { navigation, setLoader, ...userDetails } = loginData;
+    const { navigation, setLoader, setShowMessage,
+      setMessage, ...userDetails } = loginData;
     try {
       setLoader(true);
       const response = await axios.post(`${API_URL}/login`, userDetails);
@@ -139,11 +138,15 @@ export const login = createAsyncThunk<void, LoginData>(
       setLoader(false);
       if (error.response) {
         const errorMessage = error.response.data.message || 'Login failed';
-        Alert.alert('Login Failed', errorMessage);
+        setShowMessage(true)
+        setMessage('2:' + errorMessage)
+        // Alert.alert('Login Failed', errorMessage);
         return rejectWithValue(error.response.data);
       } else {
-        const genericError = 'Login failed. Please try again.';
-        Alert.alert('Login Failed', genericError);
+        const genericError = 'Please try again.';
+        setShowMessage(true)
+        setMessage('2:' + genericError)
+        // Alert.alert('Login Failed', genericError);
         return rejectWithValue(genericError);
       }
     }
@@ -244,17 +247,23 @@ export const requestPasswordReset = createAsyncThunk<void, string>(
     }
   }
 );
-export const ResetPassword = createAsyncThunk<void, { email: string, resetKey: string, newPassword: string }>(
+export const ResetPassword = createAsyncThunk<void, { email: string, resetKey: string, newPassword: string, setLoader: any, setMessage: any, setShowMessage: any }>(
   'user/resetPassword',
-  async ({ email, resetKey, newPassword }, { rejectWithValue }) => {
+  async ({ email, resetKey, newPassword, setLoader, setMessage, setShowMessage }, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${API_URL}/reset`, { email, resetKey, newPassword });
+      setMessage('1:Your password has been successfully reset.')
+      setLoader(false)
+      setShowMessage(true)
       console.log('Password reset successful:', response);
-      Alert.alert('Password Reset', 'Your password has been successfully reset.');
+      // Alert.alert('Password Reset', 'Your password has been successfully reset.');
     } catch (error: any) {
       console.log('Error during password reset:', error);
       const errorMessage = error.response?.data?.message || 'Password reset failed.';
-      Alert.alert('Password Reset Failed', errorMessage);
+      setMessage('2:' + errorMessage)
+      setLoader(false)
+      setShowMessage(true)
+      // Alert.alert('Password Reset Failed', errorMessage);
       return rejectWithValue(errorMessage);
     }
   }

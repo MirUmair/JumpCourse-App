@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Alert, StatusBar } from 'react-native';
 import Video from 'react-native-video';
 import { useNavigation } from '@react-navigation/native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -25,17 +25,21 @@ const VideoScreen = ({ navigation, route }: any) => {
   };
   return (
     <View style={styles.container}>
+      <StatusBar
+        barStyle={'light-content'}
+        backgroundColor={Colors.secondary3}
+      />
       <Video
         source={targetScreen == Screens.Home ? video : video1} // Replace with your video URL
-        style={[styles.video,{height:targetScreen != Screens.Home?'81%':'100%'}]}
+        style={[styles.video, { height: targetScreen != Screens.Home ? '81%' : '100%' }]}
         controls={false}
         resizeMode="cover"
         onEnd={handleSkip}
       />
-       <TouchableOpacity onPress={handleSkip} style={styles.skipButton}>
-            <Text style={styles.skipText}>Skip</Text>
-            <Icon name={'arrow-forward'} size={hp(3)} color={Colors.neutral1} />
-          </TouchableOpacity>
+      <TouchableOpacity onPress={handleSkip} style={styles.skipButton}>
+        <Text style={styles.skipText}>Skip</Text>
+        <Icon name={'arrow-forward'} size={hp(3)} color={Colors.neutral1} />
+      </TouchableOpacity>
       {targetScreen != Screens.Home && <>
         <View style={styles.overlay}>
           <Text style={styles.title}>JUMPING COURSE APPLICATION</Text>
@@ -60,8 +64,8 @@ const styles = StyleSheet.create({
   video: {
     width: wp('100%'), // Full screen width
     height: hp('100%'), // Full screen height
-    position:'absolute',
-     top: 0,
+    position: 'absolute',
+    top: 0,
     left: 0,
   },
   overlay: {
@@ -77,7 +81,7 @@ const styles = StyleSheet.create({
     position: 'absolute', bottom: 0,
     zIndex: 2,
     backgroundColor: Colors.neutral1,
-    height:'21%',
+    height: '21%',
     borderTopLeftRadius: wp(2),
     borderTopRightRadius: wp(2),
     shadowColor: "#000",

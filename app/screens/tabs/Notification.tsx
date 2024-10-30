@@ -1,12 +1,11 @@
 import React from 'react';
-import { SafeAreaView, StatusBar, StyleSheet, Text, View, ImageBackground, Image } from 'react-native';
-import Button from '../../components/Button';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { empty } from '../../../assets'
-import { Fonts } from '../../utils';
+import { SafeAreaView, StyleSheet } from 'react-native';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { Empty } from '../../components';
 import Header from '../../components/Header';
 import { Colors } from '../../theme';
-import { Empty } from '../../components';
+import { Fonts } from '../../utils';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 type RootStackParamList = {
   Home: undefined;
   ForgotPassword: undefined;
@@ -33,7 +32,7 @@ function Home({ navigation }: Props): React.JSX.Element {
         Title={'Notifications'}
         navigation={navigation}
         onPressBack={() => navigation.navigate('Courses')} />
-      <Empty/>
+      <Empty />
     </SafeAreaView>
   );
 }

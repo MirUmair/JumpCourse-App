@@ -7,7 +7,7 @@ export { default as DropDown } from './DropDown';
 export { default as Loader } from './Loader';
 export { default as Empty } from './Empty';
 export { default as BottomSheet } from './BottomSheet';
-export { default as Image } from './Image';
+export { default as Image } from './media';
 export { default as Modal } from './Modal';
 
 
