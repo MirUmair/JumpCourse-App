@@ -1,20 +1,25 @@
 
-import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
-import { Alert, Image, ImageBackground, Keyboard, Linking, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
-import { useDispatch } from 'react-redux';
-import { bg5 } from '../../../../assets';
-import { Loader, Button, Input, Modal, Header } from '../../../components';
-import { login, signUp } from '../../../redux/features/userSlice';
-import { AppDispatch } from '../../../redux/store';
-import { BaseUrl, Fonts, getUser, Screens } from '../../../utils';
-import { Colors } from '../../../theme';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { Image, Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { Button, Header, Input, Loader, Modal } from '../../../components';
+import { Colors } from '../../../theme';
+import { BaseUrl, Fonts, getUser } from '../../../utils';
+type User = {
+  email: string;
+  firstname: string;
+  lastname: string;
+  phone: string;
+  about: string;
+  achievement: string;
+  skill: string;
+  goal: string;
+  image?: string;
+};
 type RootStackParamList = {
   Login: undefined;
   SignUp: undefined;
@@ -31,7 +36,7 @@ function SignUp({ navigation }: Props): React.JSX.Element {
     setLoader(true)
     const fetchUser = async () => {
       try {
-        let user = await getUser(); // Assuming getUser is an async function
+        let user = await getUser();
         setfirstname(user?.firstname)
         setlastname(user?.lastname)
         setEmail(user?.email)
@@ -50,42 +55,34 @@ function SignUp({ navigation }: Props): React.JSX.Element {
 
     fetchUser(); // Call the async function
   }, []);
-  const dispatch = useDispatch<AppDispatch>();
   const [image, setImage] = useState({});
 
   const [email, setEmail] = useState('');
   const [firstname, setfirstname] = useState('');
   const [lastname, setlastname] = useState('');
-   const [emailError, setEmailError] = useState('');
+  const [emailError, setEmailError] = useState('');
   const [firstnameError, setfirstnameError] = useState('');
   const [lastnameError, setlastnameError] = useState('');
   const [achievement, setAchievement] = useState('');
   const [skills, setSkills] = useState('');
   const [goals, setGoals] = useState('');
-
   const [about, setAbout] = useState('');
   const [phone, setPhone] = useState('');
   const [loader, setLoader] = useState(false);
   const [message, setMessage] = useState('');
   const [showMessage, setShowMessage] = useState(false);
-
-
   const validateEmail = (email: string) => {
     const emailRegEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegEx.test(email);
   };
-
-
   useEffect(() => { console.log(image) }, [image])
   const imagePicker = () => {
-
     setShowMessage(true)
     setMessage('6:Would you like to take a photo or upload?')
   }
   const handleSignUp = async () => {
     Keyboard.dismiss()
     setLoader(true)
-
     setEmailError('');
     setfirstnameError('');
     setlastnameError('');
@@ -114,11 +111,11 @@ function SignUp({ navigation }: Props): React.JSX.Element {
     formdata.append("skill", skills);
     formdata.append("about", about);
     formdata.append("phone", phone);
-    if (image.uri) {
+    if (image?.uri) {
       formdata.append('image', {
-        uri: image.uri, // Correct file URI for React Native
-        name: image.fileName, // File name
-        type: image.type, // MIME type
+        uri: image?.uri,
+        name: image?.fileName,
+        type: image?.type,
       });
     }
 
@@ -140,20 +137,16 @@ function SignUp({ navigation }: Props): React.JSX.Element {
 
           }, 500);
         }, 1500);
-        console.log(result)
       })
       .catch((error) => { setLoader(false), console.error(error) });
-
-
-
-
-
   };
 
   return (
-    <SafeAreaView keyboardShouldPersistTaps={'handled'} >
-      <Modal visible={showMessage} setImage={setImage} setShowMessage={setShowMessage} message={message} />
-
+    <SafeAreaView style={styles.container}>
+      <Modal visible={showMessage}
+        setImage={setImage}
+        setShowMessage={setShowMessage}
+        message={message} />
       <StatusBar
         barStyle={'light-content'}
         backgroundColor={Colors.secondary3}
@@ -163,38 +156,91 @@ function SignUp({ navigation }: Props): React.JSX.Element {
         Title={'Edit Profile'}
         navigation={navigation}
       />
-      <ScrollView keyboardShouldPersistTaps={'handled'} showsVerticalScrollIndicator={false}>
-        <View style={{ alignItems: 'center', height: '100%', backgroundColor: Colors.neutral1 }} >
-          <TouchableOpacity onPress={imagePicker} style={styles.ImageStyle}>
-            {(userImage || image?.uri) ? <Image
-              source={{ uri: image?.uri ? image?.uri : userImage }}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={hp(12)}>
+        <ScrollView
+          keyboardShouldPersistTaps={'handled'}
+          showsVerticalScrollIndicator={false}>
+          <View style={styles.imageView} >
+            <TouchableOpacity
+              onPress={imagePicker}
+              style={styles.ImageStyle}>
+              {(userImage || image?.uri) ? <Image
+                source={{ uri: image?.uri ? image?.uri : userImage }}
+                style={styles.imageUser} /> :
+                <Icon name="user-o"
+                  size={hp(7)}
+                  color={Colors.neutral1} />
+              }
+            </TouchableOpacity>
+            <Input placeholderText={'Email'}
+              style={{ backgroundColor: Colors.primary4 }}
+              onChangeValue={setEmail}
+              value={email}
+              keyboardType="email-address" />
+            {emailError ?
+              <Text style={styles.errorText}>{emailError}</Text> : null}
+            <Input
+              placeholderText={'First Name'}
+              onChangeValue={setfirstname}
+              value={firstname} />
+            {firstnameError ?
+              <Text style={styles.errorText}>{firstnameError}</Text> : null}
+            <Input
+              placeholderText={'Last Name'}
+              onChangeValue={setlastname}
+              value={lastname} />
+            {lastnameError ? <Text style={styles.errorText}>{lastnameError}</Text> : null}
+            <Input
+              onChangeValue={setPhone}
+              value={phone}
+              keyboardType='name-phone-pad'
+              placeholderText={'Phone #'} />
+            <Input
+              multiLine={true}
+              onChangeValue={setAbout}
+              value={about}
+              style={styles.multi}
+              placeholderText={'About me'} />
+            <Input
+              multiLine={true}
+              onChangeValue={setAchievement}
+              value={achievement}
+              style={styles.multi}
+              placeholderText={'Achievement'}
+              keyboardType="email-address" />
+            <Input
+              multiLine={true}
+              onChangeValue={setSkills}
+              value={skills}
+              style={styles.multi}
+              placeholderText={'Skills and Strengths'} />
+            <Input
+              multiLine={true}
+              onChangeValue={setGoals}
+              value={goals}
+              style={styles.multi}
+              placeholderText={'Goals and Aspirations'} />
+            <Button
+              style={{ backgroundColor: Colors.secondary3 }}
+              textStyle={{ color: Colors.neutral1 }}
+              onPress={handleSignUp}
+              Title="Update changes" />
+            <View style={{ height: hp(15) }}></View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
-              style={{ width: wp(35), height: wp(35), borderRadius: wp(35) }}></Image> : <Icon name="user-o" size={hp(7)} color={Colors.neutral1}></Icon>}
-          </TouchableOpacity>
-
-          <Input placeholderText={'Email'} style={{ backgroundColor: Colors.primary4 }} onChangeValue={setEmail} value={email} keyboardType="email-address" />
-          {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-
-          <Input placeholderText={'First Name'} onChangeValue={setfirstname} value={firstname} />
-          {firstnameError ? <Text style={styles.errorText}>{firstnameError}</Text> : null}
-
-          <Input placeholderText={'Last Name'} onChangeValue={setlastname} value={lastname} />
-          {lastnameError ? <Text style={styles.errorText}>{lastnameError}</Text> : null}
-          <Input onChangeValue={setPhone} value={phone} placeholderText={'Phone #'} />
-          <Input multiLine={true} onChangeValue={setAbout} value={about} style={styles.multi} placeholderText={'About me'} />
-
-          <Input multiLine={true} onChangeValue={setAchievement} value={achievement} style={styles.multi} placeholderText={'Achievement'} keyboardType="email-address" />
-          <Input multiLine={true} onChangeValue={setSkills} value={skills} style={styles.multi} placeholderText={'Skills and Strengths'} />
-          <Input multiLine={true} onChangeValue={setGoals} value={goals} style={styles.multi} placeholderText={'Goals and Aspirations'} />
-          <Button style={{ backgroundColor: Colors.secondary3 }} textStyle={{ color: Colors.neutral1 }} onPress={handleSignUp} Title="Update changes" />
-          <View style={{ height: hp(15) }}></View>
-        </View>
-      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.neutral1
+  },
   text: {
     fontSize: 20,
     fontFamily: Fonts.bold,
@@ -203,19 +249,32 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
   },
-  ImageStyle: { width: wp(35), height: wp(35), alignItems: 'center', justifyContent: 'center', marginVertical: hp(2), backgroundColor: Colors.secondary3, borderRadius: wp(35), resizeMode: 'contain' },
-
+  imageView: {
+    alignItems: 'center',
+    height: '100%',
+    backgroundColor: Colors.neutral1
+  },
+  ImageStyle: {
+    width: wp(35),
+    height: wp(35),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: hp(2),
+    backgroundColor: Colors.secondary3,
+    borderRadius: wp(35),
+    resizeMode: 'contain'
+  },
+  imageUser: { width: wp(35), height: wp(35), borderRadius: wp(35) },
   line: {
-    flex: 1,              // This makes the line take up all available space
+    flex: 1,
     height: 1,
-    // The height of the line
-    backgroundColor: '#fff', // Line color (you can change to any color you prefer)
-    marginHorizontal: 10,  // Margin between the text and the line
+    backgroundColor: '#fff',
+    marginHorizontal: 10,
   },
   orText: {
-    fontSize: 16,         // Size of the OR text
-    fontWeight: 'bold',   // Styling for the text
-    color: '#000',        // Text color
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000',
   },
   topText: {
     alignSelf: 'center',
@@ -223,7 +282,12 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.bold,
     marginTop: '10%',
   },
-  bottomView: { flexDirection: 'row', width: '60%', alignSelf: 'center', marginTop: '5%' },
+  bottomView: {
+    flexDirection: 'row',
+    width: '60%',
+    alignSelf: 'center',
+    marginTop: '5%'
+  },
   bottomText: {
     fontSize: wp(4.5),
     fontFamily: Fonts.bold,
@@ -236,7 +300,9 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
   },
-  multi: { textAlignVertical: 'top' },
+  multi: {
+    textAlignVertical: 'top'
+  },
   errorText: {
     color: 'red',
     alignSelf: 'center',

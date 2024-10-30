@@ -26,6 +26,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { handleImagePicker, launchCameraImage } from './mediaUtils';
 
 import { Button } from '.';
+import { openSettings } from 'react-native-permissions';
 
 
 export interface Props {
@@ -34,14 +35,14 @@ export interface Props {
     type?: 1 | 2 | 3,
     setShowMessage: any,
     launchCameraWithType?: any;
-    setImage?:any;
-    navigation: any;
+    setImage?: any;
+    navigation?: any;
     onDelete?: any, onEdit?: any,
 }
-function Cards(props: Props): React.JSX.Element {
+function messageModal(props: Props): React.JSX.Element {
     const {
         type,
-        message,setImage,
+        message, setImage,
         setShowMessage,
         launchCameraWithType, onDelete, onEdit,
         visible,
@@ -70,9 +71,7 @@ function Cards(props: Props): React.JSX.Element {
         }
         else {
             setShowMessage(false), launchCameraWithType('photo')
-
         }
-
     }
     const option2 = () => {
         if (type1 === '6') {
@@ -81,7 +80,6 @@ function Cards(props: Props): React.JSX.Element {
         }
         else {
             setShowMessage(false), launchCameraWithType('video')
-
         }
 
     }
@@ -108,6 +106,9 @@ function Cards(props: Props): React.JSX.Element {
                                 <Button Title='Edit' textStyle={{ color: Colors.neutral1 }} style={styles.btn} onPress={onEdit} />
                                 <Button Title='Delete' textStyle={{ color: Colors.neutral1 }} style={styles.btn} onPress={onDelete} />
 
+                            </View>}
+                            {type1 === '7' && <View style={[styles.modalButtons, { flexDirection: 'colomn', height: hp(8) }]}>
+                                <Button Title='Open Settings' textStyle={{ color: Colors.neutral1 }} style={styles.btn} onPress={() => { setShowMessage(false), openSettings() }} />
                             </View>}
                         </LinearGradient>
                     </View>
@@ -170,4 +171,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Cards;
+export default messageModal;

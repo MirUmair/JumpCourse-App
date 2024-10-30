@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const BaseUrlLocal = 'http://192.168.0.208:5000/api/'
 export const BaseUrlLive = "https://coursejump-backend.onrender.com/api/"
 export const BaseUrl = BaseUrlLive
+export const GoogleKey='150267601582-1ukkjos3mortbdpe8o5bude67cu278e5.apps.googleusercontent.com'
 export const Screens = {
   SignUp: "SignUp",
   Login: "Login",

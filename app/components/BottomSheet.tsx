@@ -17,7 +17,7 @@ import {
     View
 } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import { check, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
+import { check, openSettings, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { heightPercentageToDP, heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
@@ -44,19 +44,92 @@ function Cards(props: Props): React.JSX.Element {
     const [message, setMessage] = useState('4:Select Media Type , Would you like to take a photo or record a video?');
 
     useEffect(() => {
-        const requestGalleryPermission = async () => {
-            try {
+        // const requestGalleryPermission = async () => {
+        //     try {
+        //         const galleryGranted = await PermissionsAndroid.request(
+        //             PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
+        //         );
+        //         setHasGalleryPermission(galleryGranted === PermissionsAndroid.RESULTS.GRANTED);
+        //     } catch (error) {
+        //         console.error('Failed to request gallery permission', error);
+        //     }
+        // };
+
+        // requestGalleryPermission();
+    }, []);
+    // Function to request gallery permissions
+    const requestGalleryPermissions = async () => {
+        if (Platform.OS === 'android') {
+            const isAndroid13OrHigher = Platform.Version >= 33;
+
+            if (!isAndroid13OrHigher) {
                 const galleryGranted = await PermissionsAndroid.request(
                     PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
                 );
-                setHasGalleryPermission(galleryGranted === PermissionsAndroid.RESULTS.GRANTED);
-            } catch (error) {
-                console.error('Failed to request gallery permission', error);
-            }
-        };
 
-        requestGalleryPermission();
-    }, []);
+                if (galleryGranted === "never_ask_again") {
+                    setShowMessage(true);
+                    setMessage('7:Gallery access required. Please enable it in settings.');
+                    return false;
+                }
+
+                setHasGalleryPermission(galleryGranted === 'granted');
+                return galleryGranted === 'granted';
+            } else {
+                const galleryGranted = await PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES
+                );
+
+                setHasGalleryPermission(galleryGranted === 'granted');
+                return galleryGranted === 'granted';
+            }
+        } else {
+            const galleryResult = await check(PERMISSIONS.IOS.PHOTO_LIBRARY);
+
+            if (galleryResult !== RESULTS.GRANTED) {
+                const galleryResponse = await request(PERMISSIONS.IOS.PHOTO_LIBRARY);
+                setHasGalleryPermission(galleryResponse === RESULTS.GRANTED);
+                return galleryResponse === RESULTS.GRANTED;
+            } else {
+                setHasGalleryPermission(true);
+                return true;
+            }
+        }
+    };
+
+    // Function to request camera permissions
+    const requestCameraPermissions = async () => {
+        if (Platform.OS === 'android') {
+            const cameraGranted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
+            if (cameraGranted === "never_ask_again") {
+                setShowMessage(true);
+                setMessage('7:Camera access required. Please enable it in settings.');
+                return false;
+            }
+            if (cameraGranted !== 'granted') {
+                setShowMessage(true);
+                setMessage('2:Camera permission is required to take photos.');
+                return false;
+            }
+
+            return true;
+        } else {
+            const cameraResult = await check(PERMISSIONS.IOS.CAMERA);
+
+            if (cameraResult !== RESULTS.GRANTED) {
+                const cameraResponse = await request(PERMISSIONS.IOS.CAMERA);
+
+                if (cameraResponse !== RESULTS.GRANTED) {
+                    setShowMessage(true);
+                    setMessage('2:Camera permission is required to take photos.');
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    };
+
     const requestPermissions = async (forCamera = false) => {
         if (Platform.OS === 'android') {
             const isAndroid13OrHigher = Platform.Version >= 33;
@@ -64,11 +137,21 @@ function Cards(props: Props): React.JSX.Element {
                 const galleryGranted = await PermissionsAndroid.request(
                     PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
                 );
+                if (galleryGranted === "never_ask_again") {
+
+                    setShowMessage(true)
+                    setMessage('7:Gallery access required. Please enable it in settings.')
+
+                    return
+                }
                 setHasGalleryPermission(galleryGranted === 'granted');
-            } else {
+            }
+
+            else {
                 const galleryGranted = await PermissionsAndroid.request(
                     PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES
                 );
+
                 setHasGalleryPermission(galleryGranted === 'granted');
             }
             if (forCamera) {
@@ -82,10 +165,14 @@ function Cards(props: Props): React.JSX.Element {
             return true;
         } else {
             const galleryResult = await check(PERMISSIONS.IOS.PHOTO_LIBRARY);
+            Alert.alert(galleryResult)
             if (galleryResult !== RESULTS.GRANTED) {
                 const galleryResponse = await request(PERMISSIONS.IOS.PHOTO_LIBRARY);
                 setHasGalleryPermission(galleryResponse === RESULTS.GRANTED);
-            } else {
+            }
+
+
+            else {
                 setHasGalleryPermission(true);
             }
 
@@ -104,17 +191,11 @@ function Cards(props: Props): React.JSX.Element {
         }
     };
     const handleImagePicker = async () => {
-        const permissionGranted = await requestPermissions(true);
+        const permissionGranted = await requestGalleryPermissions();
         if (!permissionGranted) {
             return;
         }
-        if (!hasGalleryPermission) {
-            setShowMessage(true)
-            setMessage('3:Gallery permission is required to upload images.')
-            return;
-        }
         bottomSheetRef.current.close()
-
         setLoader(true)
         const result = await launchImageLibrary({ mediaType: 'mixed', quality: 1 });
         if (result.assets && result.assets.length > 0) {
@@ -124,13 +205,12 @@ function Cards(props: Props): React.JSX.Element {
                 navigation.navigate(Screens.AddCourse, { image: result.assets[0] });
             bottomSheetRef.current?.close();
         }
-        else
-        {
+        else {
             setLoader && setLoader(false);
         }
     };
     const handleCameraLaunch = async () => {
-        const permissionGranted = await requestPermissions(true);
+        const permissionGranted = await requestCameraPermissions();
         if (!permissionGranted) {
             return;
         }
@@ -161,8 +241,7 @@ function Cards(props: Props): React.JSX.Element {
 
                     bottomSheetRef.current?.close(); // Close the bottom sheet after selecting media
                 }
-                else
-                {
+                else {
                     setLoader && setLoader(false);
                 }
             });

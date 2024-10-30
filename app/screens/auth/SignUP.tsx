@@ -9,7 +9,7 @@ import { bg5 } from '../../../assets';
 import { Loader, Button, Input, Modal } from '../../components';
 import { login, signUp } from '../../redux/features/userSlice';
 import { AppDispatch } from '../../redux/store';
-import { BaseUrl, Fonts, Screens } from '../../utils';
+import { BaseUrl, Fonts, GoogleKey, Screens } from '../../utils';
 import { Colors } from '../../theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -46,9 +46,8 @@ function SignUp({ navigation }: Props): React.JSX.Element {
   };
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId: '150267601582-1ukkjos3mortbdpe8o5bude67cu278e5.apps.googleusercontent.com', //'231913951546-cgs1o3mdmn5uv6jcpeusgqarh7quajvi.apps.googleusercontent.com', // From the Google Cloud Console
+      webClientId: GoogleKey,
       offlineAccess: true,
-      // forceCodeForRefreshToken: true,
     });
   }, []);
 
@@ -79,7 +78,7 @@ function SignUp({ navigation }: Props): React.JSX.Element {
         fetch(BaseUrl + "users/register", requestOptions)
           .then((response) => response.json())
           .then(async (result) => {
-             if (result?.message == 'User already exists') {
+            if (result?.message == 'User already exists') {
               const loginData = {
                 email: user.email,
                 password: user.id,
@@ -142,22 +141,22 @@ function SignUp({ navigation }: Props): React.JSX.Element {
       password,
       firstname,
       lastname,
-      navigation,  
-      setLoader, 
+      navigation,
+      setLoader,
       setShowMessage,
       setMessage
-     };
+    };
     dispatch(signUp(userData))
   };
 
   return (
     <SafeAreaView keyboardShouldPersistTaps={'handled'} >
-       <StatusBar
-                barStyle={'light-content'}
-                backgroundColor={Colors.secondary3}
-            />
+      <StatusBar
+        barStyle={'light-content'}
+        backgroundColor={Colors.secondary3}
+      />
       <Loader loading={loader} />
-      <Modal visible={showMessage} setShowMessage={setShowMessage} message={message}/>
+      <Modal visible={showMessage} setShowMessage={setShowMessage} message={message} />
 
       <ImageBackground source={bg5} resizeMode="cover" style={styles.image}>
         <View style={{ marginTop: hp('25%') }}>
@@ -175,11 +174,8 @@ function SignUp({ navigation }: Props): React.JSX.Element {
           <Button onPress={handleSignUp} Title="Sign Up" />
           <View style={{ flexDirection: 'row', marginTop: hp(3), alignSelf: 'center', width: wp(90), alignItems: 'center', justifyContent: 'center' }}>
             <View style={styles.line} />
-             
             <Text style={styles.bottomText}>OR</Text>
-             
             <View style={styles.line} />
-
           </View>
           <Button leftIcon={true} onPress={googleSignUp} Title="Sign up with Google" />
           <View style={styles.bottomView}>

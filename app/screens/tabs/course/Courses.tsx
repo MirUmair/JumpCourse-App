@@ -1,41 +1,35 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, Image, Keyboard, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import { FlatList, Image, Keyboard, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
-import Icon from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
+import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useFocusEffect } from '@react-navigation/native';
 import RNRestart from 'react-native-restart';
 import { useDispatch, useSelector } from 'react-redux';
+import { arrow, emptyIconRider } from '../../../../assets';
 import { BottomSheet, Cards, Header, Loader, Modal } from '../../../components'; // Assuming you have these components
 import { deleteCourse, getCoursesByUser } from '../../../redux/features/courseSlice';
 import { AppDispatch, RootState } from '../../../redux/store';
 import { Colors } from '../../../theme';
 import { Fonts, Screens } from '../../../utils';
-import { emptyIconRider, arrow } from '../../../../assets';
-import { BottomSheetModalInternalProvider } from '@gorhom/bottom-sheet/lib/typescript/contexts';
 
 const Home = ({ navigation }) => {
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [refreshing, setRefreshing] = useState(true); // New state for refreshing
+  const [refreshing, setRefreshing] = useState(true);
   const bottomSheetRef = useRef(null);
   const dispatch = useDispatch<AppDispatch>();
   const [showMessage, setShowMessage] = useState(false);
   const [message, setMessage] = useState(':');
-  const { courses, status } = useSelector((state: RootState) => state.course); // status will track the loading state
+  const { courses, status } = useSelector((state: RootState) => state.course);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCourse, setFilteredCourses] = useState([]);
   useEffect(() => {
     setRefreshing(true)
   }, []);
-
   useEffect(() => {
     setFilteredCourses(courses);
-
   }, [courses]);
 
   const filterCourses = () => {
@@ -45,9 +39,7 @@ const Home = ({ navigation }) => {
       course.name.includes(searchTerm)
     );
     setFilteredCourses(newCourse);
-
     setTimeout(() => {
-
       setRefreshing(false)
     }, 500);
   };
@@ -74,25 +66,21 @@ const Home = ({ navigation }) => {
       console.error('Error logging out: ', error);
     }
   };
-
-
   useFocusEffect(
     useCallback(() => {
       setRefreshing(true)
       dispatch(getCoursesByUser());
       setRefreshing(false)
+      return () => {
+        bottomSheetRef?.current?.close()
+      };
     }, [dispatch])
   );
-
-
-
-
   const handleRefresh = async () => {
     setRefreshing(true);
-    await dispatch(getCoursesByUser()); // Fetch courses again
+    await dispatch(getCoursesByUser());
     setRefreshing(false);
   };
-
   const handleToggleBottomSheet = useCallback(() => {
     bottomSheetRef.current?.snapToIndex(1);
   }, []);
@@ -100,19 +88,13 @@ const Home = ({ navigation }) => {
   const handleDeleteCourse = () => {
     setShowMessage(false)
     setRefreshing(true)
-
     dispatch(deleteCourse(selectedCourse._id));
     setTimeout(() => {
       setMessage('1:Course deleted Successfully!')
       setRefreshing(false)
       setShowMessage(true)
-
     }, 1000);
-
-
   };
-
-
   const openCourseOptions = (course) => {
     setSelectedCourse(course);
     setShowMessage(true);
@@ -122,7 +104,6 @@ const Home = ({ navigation }) => {
   const handleEditCourse = () => {
     setShowMessage(false)
     navigation.navigate(Screens.EditCourse, { course: selectedCourse });
-    setModalVisible(false);
   };
 
   const renderCourseItem = ({ item, index }) => (
@@ -151,8 +132,7 @@ const Home = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <Modal visible={showMessage} setShowMessage={setShowMessage} message={message} onEdit={handleEditCourse}
         onDelete={handleDeleteCourse} />
-
-      <Header icon='log-out' Title="Courses" backIcon={false} onPressBack={() => handleLogout()} backIcon={true} />
+      <Header icon='log-out' Title="Courses" backIcon={true} onPressBack={() => handleLogout()} />
       <View style={styles.inputContainer}>
         <Icon name="search" size={hp(2)} color={Colors.secondary3} style={{ padding: wp(1) }} />
         <TextInput
@@ -163,7 +143,6 @@ const Home = ({ navigation }) => {
         />
         <TouchableOpacity onPress={filterCourses}>
           <FontAwesome name="send" size={hp(2)} color={Colors.secondary3} style={{ padding: wp(1) }} />
-
         </TouchableOpacity>
       </View>
       {refreshing ? (
@@ -175,19 +154,19 @@ const Home = ({ navigation }) => {
           data={filterCourse}
           renderItem={renderCourseItem}
           keyExtractor={(item) => item._id.toString()}
-          refreshing={false} // Bind refreshing state
-          onRefresh={handleRefresh} // Bind handleRefresh function
+          refreshing={false}
+          onRefresh={handleRefresh}
           ListEmptyComponent={EmptyListComponent}
         />
       )}
-
       <TouchableOpacity style={styles.iconStyle} onPress={handleToggleBottomSheet}>
         <Icon name={'add-circle'} size={hp(8.5)} color={Colors.secondary3} />
       </TouchableOpacity>
-
-
-      <BottomSheet isSkip={true} setLoader={setRefreshing} bottomSheetRef={bottomSheetRef} navigation={navigation} />
-
+      <BottomSheet
+        isSkip={true}
+        setLoader={setRefreshing}
+        bottomSheetRef={bottomSheetRef}
+        navigation={navigation} />
     </SafeAreaView>
   );
 };
@@ -232,7 +211,7 @@ const styles = StyleSheet.create({
   },
   iconStyle: {
     position: 'absolute',
-    top: hp('73%'),
+    top: hp('77%'),
     right: wp('3%'),
     borderRadius: hp(5),
     backgroundColor: Colors.neutral1
@@ -265,8 +244,8 @@ const styles = StyleSheet.create({
   },
   emptyContainer: { alignItems: 'center', justifyContent: 'center' },
   ImageStyle: {
-    height: hp(22),
-    resizeMode: 'contain', marginTop: hp(6)
+    height: hp(20),
+    resizeMode: 'contain', marginTop: hp(12)
   },
   arrowStyle: {
     height: hp(18), width: wp(37), marginTop: hp(2.5), alignSelf: 'flex-end',
@@ -274,10 +253,10 @@ const styles = StyleSheet.create({
   },
   emptyText:
   {
-    fontSize: hp(1.8), lineHeight: hp(2.5),
+    fontSize: hp(1.6), lineHeight: hp(2.5),
     color: Colors.secondary3,
 
-    width: wp(90), textAlign: 'center',
+    width: wp(85), textAlign: 'center',
     fontFamily: Fonts.medium,
   },
   nameText: {
